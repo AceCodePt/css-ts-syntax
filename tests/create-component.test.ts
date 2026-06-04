@@ -15,7 +15,7 @@ const MOCK_SHARED_ATTRIBUTES = sharedAttributeConfig({
 const MOCK_TAG_ATTRIBUTES = tagConfig({
   div: { innerHTML: "*" },
   p: { innerHTML: ["#text"] },
-  img: { innerHTML: [], src: "" as string, alt: "" as string },
+  img: { innerHTML: [], src: "", alt: "" },
   ul: { innerHTML: ["li"] },
   li: { innerHTML: ["#text"] },
 });
