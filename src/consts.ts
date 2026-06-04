@@ -1,4 +1,7 @@
-export const HTML_GLOBAL_ATTRIBUTES = {
+import { sharedAttributeConfig } from "./config/shared-attribute-config";
+import { tagConfig } from "./config/tag-config";
+
+export const HTML_SHARED_ATTRIBUTES = sharedAttributeConfig({
   id: "" as string | undefined,
   class: "" as string | undefined,
   style: "" as string | undefined,
@@ -25,9 +28,9 @@ export const HTML_GLOBAL_ATTRIBUTES = {
   draggable: "" as "true" | "false" | boolean | undefined,
   spellcheck: "" as "true" | "false" | boolean | undefined,
   role: "" as string | undefined, // For ARIA accessibility landmarking
-} as const;
+});
 
-export const HTML_TAG_ATTRIBUTES = {
+export const HTML_TAG_ATTRIBUTES = tagConfig({
   div: {
     innerHTML: "*",
   },
@@ -56,22 +59,22 @@ export const HTML_TAG_ATTRIBUTES = {
     innerHTML: "*",
   },
   h1: {
-    innerHTML: ["#text", "span", "a", "strong", "em"],
+    innerHTML: ["#text", "span", "a"],
   },
   h2: {
-    innerHTML: ["#text", "span", "a", "strong", "em"],
+    innerHTML: ["#text", "span", "a"],
   },
   h3: {
-    innerHTML: ["#text", "span", "a", "strong", "em"],
+    innerHTML: ["#text", "span", "a"],
   },
   h4: {
-    innerHTML: ["#text", "span", "a", "strong", "em"],
+    innerHTML: ["#text", "span", "a"],
   },
   h5: {
-    innerHTML: ["#text", "span", "a", "strong", "em"],
+    innerHTML: ["#text", "span", "a"],
   },
   h6: {
-    innerHTML: ["#text", "span", "a", "strong", "em"],
+    innerHTML: ["#text", "span", "a"],
   },
   a: {
     href: "" as string,
@@ -79,7 +82,7 @@ export const HTML_TAG_ATTRIBUTES = {
     download: "" as string | boolean | undefined,
     rel: "" as string | undefined,
     hreflang: "" as string | undefined,
-    innerHTML: "*",
+    innerHTML: [],
   },
   ul: {
     innerHTML: ["li"],
@@ -130,7 +133,7 @@ export const HTML_TAG_ATTRIBUTES = {
     name: "" as string | undefined,
     value: "" as string | undefined,
     form: "" as string | undefined,
-    innerHTML: ["#text", "span", "img", "i", "strong"],
+    innerHTML: ["#text", "span", "img"],
   },
   textarea: {
     name: "" as string | undefined,
@@ -162,8 +165,11 @@ export const HTML_TAG_ATTRIBUTES = {
   table: {
     innerHTML: ["thead", "tbody", "tr"],
   },
-  tr: {
-    innerHTML: ["th", "td"],
+  thead: {
+    innerHTML: ["tr"],
+  },
+  tbody: {
+    innerHTML: ["tr"],
   },
   td: {
     colspan: 0 as number | undefined,
@@ -171,4 +177,13 @@ export const HTML_TAG_ATTRIBUTES = {
     headers: "" as string | undefined,
     innerHTML: "*",
   },
-} as const;
+  th: {
+    colspan: 0 as number | undefined,
+    rowspan: 0 as number | undefined,
+    headers: "" as string | undefined,
+    innerHTML: "*",
+  },
+  tr: {
+    innerHTML: ["th", "td"],
+  },
+});
