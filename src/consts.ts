@@ -1,5 +1,5 @@
-import { sharedAttributeConfig } from "./config/shared-attribute-config";
-import { tagConfig } from "./config/tag-config";
+import { sharedAttributeConfig } from "./config/shared-attribute-config.ts";
+import { tagConfig } from "./config/tag-config.ts";
 
 export const HTML_SHARED_ATTRIBUTES = sharedAttributeConfig({
   id: "" as string | undefined,
