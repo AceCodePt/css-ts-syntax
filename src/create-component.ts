@@ -1,4 +1,4 @@
-import { type SharedAttributeConfig } from "./config/shared-attribute-config.ts";
+import type { SharedAttributeConfig } from "./config/shared-attribute-config.ts";
 import { type BaseTagConfig } from "./config/tag-config.ts";
 
 export type ComponentDictionary<
@@ -54,6 +54,22 @@ export type ComponentNode<
     undefined
   >;
 };
+
+type StrictNode<
+  TNode,
+  TTagConfig extends BaseTagConfig,
+  TGlobalConfig extends SharedAttributeConfig,
+> = TNode extends { tag: infer T extends keyof TTagConfig & string }
+  ? {
+      [K in keyof TNode]: K extends "tag" | "innerHTML"
+        ? TNode[K]
+        : K extends keyof TTagConfig[T]
+          ? TNode[K]
+          : K extends keyof TGlobalConfig
+            ? TNode[K]
+            : never;
+    }
+  : never;
 
 export function validateComponent<
   TTagConfig extends BaseTagConfig,
@@ -195,7 +211,11 @@ export function createComponent<
   TTagConfig extends BaseTagConfig,
   TGlobalConfig extends SharedAttributeConfig,
   const TNode extends AnyComponentNode<TTagConfig, TGlobalConfig>,
->(htmlTagAttributes: TTagConfig, globalAttributes: TGlobalConfig, node: TNode) {
+>(
+  htmlTagAttributes: TTagConfig,
+  globalAttributes: TGlobalConfig,
+  node: TNode & StrictNode<TNode, TTagConfig, TGlobalConfig>,
+): TNode {
   validateComponent(htmlTagAttributes, globalAttributes, node);
   return node;
 }
