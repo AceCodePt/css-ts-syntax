@@ -1,16 +1,22 @@
 {
-  "name": "css-ts-syntax",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+	"name": "css-ts-syntax",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.ts",
+	"type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test",
+    "test:watch": "node --test --watch"
   },
-  "keywords": [],
-  "author": "Sagi Carmel (https://github.com/AceCodePt)",
-  "license": "ISC",
-  "packageManager": "pnpm@10.33.3",
-  "devDependencies": {
-    "@total-typescript/ts-reset": "^0.6.1"
-  }
+	"keywords": [],
+	"author": "Sagi Carmel (https://github.com/AceCodePt)",
+	"license": "ISC",
+	"packageManager": "pnpm@10.33.3",
+	"devDependencies": {
+		"@types/node": "^25.9.1",
+		"@total-typescript/ts-reset": "^0.6.1"
+	},
+	"dependencies": {
+		"typescript": "^6.0.3"
+	}
 }
