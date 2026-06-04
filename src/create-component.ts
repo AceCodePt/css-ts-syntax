@@ -1,5 +1,5 @@
-import { type SharedAttributeConfig } from "./config/shared-attribute-config";
-import { type BaseTagConfig } from "./config/tag-config";
+import { type SharedAttributeConfig } from "./config/shared-attribute-config.ts";
+import { type BaseTagConfig } from "./config/tag-config.ts";
 
 export type ComponentDictionary<
   TTagConfig extends BaseTagConfig,
