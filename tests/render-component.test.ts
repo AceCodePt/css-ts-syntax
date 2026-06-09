@@ -1,19 +1,19 @@
 import { test, describe } from "node:test";
 import assert from "node:assert";
 import { renderComponent } from "../src/render/render-component.ts";
-import { tagConfig } from "../src/config/tag-config.ts";
-import { sharedAttributeConfig } from "../src/config/shared-attribute-config.ts";
+import { tagDefinition } from "../src/config/tag-config.ts";
+import { attributeConfig } from "../src/config/attribute-config.ts";
 import { createComponent } from "../src/create-component.ts";
 
 // ==========================================
 // 1. SETUP MINIMAL MOCK SCHEMA CONFIGS
 // ==========================================
-const MOCK_SHARED_ATTRIBUTES = sharedAttributeConfig({
+const MOCK_SHARED_ATTRIBUTES = attributeConfig({
   id: "" as string,
   class: "" as string,
 });
 
-const MOCK_TAG_ATTRIBUTES = tagConfig({
+const MOCK_TAG_ATTRIBUTES = tagDefinition({
   div: { innerHTML: "*" },
   p: { innerHTML: ["#text"] },
   img: {
@@ -32,7 +32,7 @@ describe("Component Renderer", () => {
   test("should render a basic element with text content", () => {
     const node = createComponent(MOCK_TAG_ATTRIBUTES, MOCK_SHARED_ATTRIBUTES, {
       tag: "p",
-      innerHTML: "Hello World",
+      innerHTML: ["Hello World"],
     } as const);
 
     const result = renderComponent(MOCK_TAG_ATTRIBUTES, node);
@@ -44,7 +44,7 @@ describe("Component Renderer", () => {
       tag: "div",
       id: "main-card",
       class: "container",
-      innerHTML: "Content",
+      innerHTML: ["Content"],
     } as const);
 
     const result = renderComponent(MOCK_TAG_ATTRIBUTES, node);
@@ -55,7 +55,7 @@ describe("Component Renderer", () => {
   });
 
   test("should handle boolean attributes correctly (handling true, false, and undefined)", () => {
-    const localTags = tagConfig({
+    const localTags = tagDefinition({
       button: {
         innerHTML: ["#text"],
         disabled: false as boolean, // 👈 Widened to accept any boolean
@@ -68,7 +68,7 @@ describe("Component Renderer", () => {
       tag: "button",
       disabled: true,
       autofocus: false,
-      innerHTML: "Submit",
+      innerHTML: ["Submit"],
     } as const);
 
     const result = renderComponent(localTags, node);
@@ -94,13 +94,13 @@ describe("Component Renderer", () => {
         {
           item1: {
             tag: "li",
-            innerHTML: "First Item",
+            innerHTML: ["First Item"],
           },
         },
         {
           item2: {
             tag: "li",
-            innerHTML: "Second Item",
+            innerHTML: ["Second Item"],
           },
         },
       ],
@@ -120,7 +120,7 @@ describe("Component Renderer", () => {
         {
           "arbitrary-wrapper-key-here": {
             tag: "p",
-            innerHTML: "Deep Text",
+            innerHTML: ["Deep Text"],
           },
         },
       ],
