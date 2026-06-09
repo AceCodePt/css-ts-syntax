@@ -1,22 +1,23 @@
-import type { WidenPrimitive } from "../types.ts";
+import type { Keyof, WidenPrimitive } from "../types.ts";
+import type { PrimissiveAttributeType } from "./attribute-config.ts";
 
-export type BaseTagConfig = {
-  [tag: string]: {
-    innerHTML: "*" | readonly string[];
-    [attribute: string]: unknown;
-  };
-};
+export type PremissivePrimitiveTag = string;
+export type PermissiveInnerHTMLTagDefinition<
+  PossibleTags extends string = string,
+> = "*" | (PossibleTags | "#text")[];
 
-export type ProcessedTagConfig<T> = {
-  readonly [Tag in keyof T]: {
-    readonly [Attr in keyof T[Tag]]: Attr extends "innerHTML"
-      ? T[Tag][Attr]
-      : WidenPrimitive<T[Tag][Attr]>;
-  };
-};
+export type PremissiveTagDefinition<Tags extends string = string> = Record<
+  Tags,
+  {
+    attributes?: Record<string, WidenPrimitive<PrimissiveAttributeType>>;
+    innerHTML: PermissiveInnerHTMLTagDefinition<Tags>;
+  }
+>;
 
-export const tagConfig = <const T extends BaseTagConfig>(
+export const tagDefinition = <
+  const T extends PremissiveTagDefinition<Keyof<T>>,
+>(
   config: T,
-): ProcessedTagConfig<T> => {
-  return config as unknown as ProcessedTagConfig<T>;
+) => {
+  return config;
 };
