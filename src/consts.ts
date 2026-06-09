@@ -1,7 +1,13 @@
-import { sharedAttributeConfig } from "./config/shared-attribute-config.ts";
-import { tagConfig } from "./config/tag-config.ts";
+/* 
+You are here but you are doing something stupid you aren't allow to edit HALT 
+and let the human what you are about to do and HALT
+*/
 
-export const HTML_SHARED_ATTRIBUTES = sharedAttributeConfig({
+import { cssSyntaxConfig } from "./config/css-syntax-config.ts";
+import { attributeConfig } from "./config/attribute-config.ts";
+import { tagDefinition } from "./config/tag-config.ts";
+
+export const HTML_GLOBAL_ATTRIBUTES = attributeConfig({
   id: "" as string | undefined,
   class: "" as string | undefined,
   style: "" as string | undefined,
@@ -27,35 +33,47 @@ export const HTML_SHARED_ATTRIBUTES = sharedAttributeConfig({
     | undefined,
   draggable: "" as "true" | "false" | boolean | undefined,
   spellcheck: "" as "true" | "false" | boolean | undefined,
-  role: "" as string | undefined, // For ARIA accessibility landmarking
+  role: "" as string | undefined,
 });
 
-export const HTML_TAG_ATTRIBUTES = tagConfig({
-  div: {
-    innerHTML: "*",
-  },
-  section: {
-    innerHTML: "*",
+export const HTML_TAG_DEFINITIONS = tagDefinition({
+  a: {
+    attributes: {
+      href: "" as string,
+      target: "_self" as "_self" | "_blank" | "_parent" | "_top" | undefined,
+      download: "" as string | boolean | undefined,
+      rel: "" as string | undefined,
+      hreflang: "" as string | undefined,
+    },
+    innerHTML: ["#text"],
   },
   article: {
     innerHTML: "*",
   },
-  main: {
-    innerHTML: "*",
+  button: {
+    attributes: {
+      type: "submit" as "submit" | "reset" | "button" | undefined,
+      disabled: false as boolean | undefined,
+      name: "" as string | undefined,
+      value: "" as string | undefined,
+      form: "" as string | undefined,
+    },
+    innerHTML: ["#text", "span", "img"],
   },
-  header: {
+  div: {
     innerHTML: "*",
   },
   footer: {
     innerHTML: "*",
   },
-  nav: {
-    innerHTML: "*",
-  },
-  p: {
-    innerHTML: "*",
-  },
-  span: {
+  form: {
+    attributes: {
+      action: "" as string,
+      method: "get" as "get" | "post" | "dialog",
+      enctype: "" as string | undefined,
+      novalidate: false as boolean | undefined,
+      target: "_self" as "_self" | "_blank" | "_parent" | "_top" | undefined,
+    },
     innerHTML: "*",
   },
   h1: {
@@ -76,114 +94,131 @@ export const HTML_TAG_ATTRIBUTES = tagConfig({
   h6: {
     innerHTML: ["#text", "span", "a"],
   },
-  a: {
-    href: "" as string,
-    target: "_self" as "_self" | "_blank" | "_parent" | "_top" | undefined,
-    download: "" as string | boolean | undefined,
-    rel: "" as string | undefined,
-    hreflang: "" as string | undefined,
+  header: {
+    innerHTML: "*",
+  },
+  img: {
+    attributes: {
+      src: "" as string,
+      alt: "" as string,
+      width: 0 as number | undefined,
+      height: 0 as number | undefined,
+      loading: "lazy" as "lazy" | "eager" | undefined,
+      srcset: "" as string | undefined,
+      sizes: "" as string | undefined,
+    },
     innerHTML: [],
   },
-  ul: {
-    innerHTML: ["li"],
+  input: {
+    attributes: {
+      type: "text" as
+        | "text"
+        | "number"
+        | "password"
+        | "checkbox"
+        | "radio"
+        | "submit"
+        | "button"
+        | "email"
+        | "hidden",
+      value: "",
+      checked: false as boolean | undefined,
+      name: "" as string | undefined,
+      placeholder: "" as string | undefined,
+      disabled: false as boolean | undefined,
+      required: false as boolean | undefined,
+      readonly: false as boolean | undefined,
+      maxlength: 0 as number | undefined,
+      minlength: 0 as number | undefined,
+      max: "" as string | number | undefined,
+      min: "" as string | number | undefined,
+      step: "" as string | number | undefined,
+      pattern: "" as string | undefined,
+    },
+    innerHTML: [],
   },
-  ol: {
-    innerHTML: ["li"],
+  label: {
+    attributes: {
+      for: "" as string | undefined,
+      form: "" as string | undefined,
+    },
+    innerHTML: ["#text", "input", "span", "img"],
   },
   li: {
     innerHTML: "*",
   },
-  form: {
-    action: "" as string,
-    method: "get" as "get" | "post" | "dialog",
-    enctype: "" as string | undefined,
-    novalidate: false as boolean | undefined,
-    target: "_self" as "_self" | "_blank" | "_parent" | "_top" | undefined,
+  main: {
     innerHTML: "*",
   },
-  input: {
-    type: "text" as
-      | "text"
-      | "number"
-      | "password"
-      | "checkbox"
-      | "radio"
-      | "submit"
-      | "button"
-      | "email"
-      | "hidden",
-    value: "" as string,
-    checked: false as boolean | undefined,
-    name: "" as string | undefined,
-    placeholder: "" as string | undefined,
-    disabled: false as boolean | undefined,
-    required: false as boolean | undefined,
-    readonly: false as boolean | undefined,
-    maxlength: 0 as number | undefined,
-    minlength: 0 as number | undefined,
-    max: "" as string | number | undefined,
-    min: "" as string | number | undefined,
-    step: "" as string | number | undefined,
-    pattern: "" as string | undefined,
-    innerHTML: [],
+  nav: {
+    innerHTML: "*",
   },
-  button: {
-    type: "submit" as "submit" | "reset" | "button" | undefined,
-    disabled: false as boolean | undefined,
-    name: "" as string | undefined,
-    value: "" as string | undefined,
-    form: "" as string | undefined,
-    innerHTML: ["#text", "span", "img"],
+  ol: {
+    innerHTML: ["li"],
   },
-  textarea: {
-    name: "" as string | undefined,
-    value: "" as string,
-    placeholder: "" as string | undefined,
-    rows: 0 as number | undefined,
-    cols: 0 as number | undefined,
-    disabled: false as boolean | undefined,
-    required: false as boolean | undefined,
-    readonly: false as boolean | undefined,
-    maxlength: 0 as number | undefined,
-    innerHTML: ["#text"],
+  p: {
+    innerHTML: "*",
   },
-  label: {
-    for: "" as string | undefined,
-    form: "" as string | undefined,
-    innerHTML: ["#text", "input", "span", "img"],
+  section: {
+    innerHTML: "*",
   },
-  img: {
-    src: "" as string,
-    alt: "" as string,
-    width: 0 as number | undefined,
-    height: 0 as number | undefined,
-    loading: "lazy" as "lazy" | "eager" | undefined,
-    srcset: "" as string | undefined,
-    sizes: "" as string | undefined,
-    innerHTML: [],
+  span: {
+    innerHTML: "*",
   },
   table: {
     innerHTML: ["thead", "tbody", "tr"],
-  },
-  thead: {
-    innerHTML: ["tr"],
   },
   tbody: {
     innerHTML: ["tr"],
   },
   td: {
-    colspan: 0 as number | undefined,
-    rowspan: 0 as number | undefined,
-    headers: "" as string | undefined,
+    attributes: {
+      colspan: 0 as number | undefined,
+      rowspan: 0 as number | undefined,
+      headers: "" as string | undefined,
+    },
     innerHTML: "*",
   },
+  textarea: {
+    attributes: {
+      name: "" as string | undefined,
+      value: "" as string,
+      placeholder: "" as string | undefined,
+      rows: 0 as number | undefined,
+      cols: 0 as number | undefined,
+      disabled: false as boolean | undefined,
+      required: false as boolean | undefined,
+      readonly: false as boolean | undefined,
+      maxlength: 0 as number | undefined,
+    },
+    innerHTML: ["#text"],
+  },
   th: {
-    colspan: 0 as number | undefined,
-    rowspan: 0 as number | undefined,
-    headers: "" as string | undefined,
+    attributes: {
+      colspan: 0 as number | undefined,
+      rowspan: 0 as number | undefined,
+      headers: "" as string | undefined,
+    },
     innerHTML: "*",
+  },
+  thead: {
+    innerHTML: ["tr"],
   },
   tr: {
     innerHTML: ["th", "td"],
   },
+  ul: {
+    innerHTML: ["li"],
+  },
+});
+
+export const CSS_SYNTAX = cssSyntaxConfig({
+  "<angle>": "" as `${number}${"dag" | "rad" | "turn"}`,
+  "<integer>": "" as `${bigint}`,
+  "<length>":
+    "" as `${number}${"px" | "rem" | "em" | "vw" | "vh" | "vmin" | "vmax" | "ch" | "lh" | "in" | "pt" | "%"}`,
+  "<number>": "" as `${number}`,
+  "<percentage>": "" as `${bigint}%`,
+  "<string>": "" as string,
+  "<url>": "" as `url(${string})`,
 });
