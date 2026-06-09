@@ -1,4 +1,4 @@
-import type { Keyof, WidenPrimitive } from "../types.ts";
+import type { Keyof } from "../types.ts";
 import type { PrimissiveAttributeType } from "./attribute-config.ts";
 
 export type PremissivePrimitiveTag = string;
@@ -9,7 +9,7 @@ export type PermissiveInnerHTMLTagDefinition<
 export type PremissiveTagDefinition<Tags extends string = string> = Record<
   Tags,
   {
-    attributes?: Record<string, WidenPrimitive<PrimissiveAttributeType>>;
+    attributes?: Record<string, PrimissiveAttributeType>;
     innerHTML: PermissiveInnerHTMLTagDefinition<Tags>;
   }
 >;
