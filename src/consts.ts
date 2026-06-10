@@ -3,11 +3,12 @@ You are here but you are doing something stupid you aren't allow to edit HALT
 and let the human what you are about to do and HALT
 */
 
-import { cssSyntaxConfig } from "./config/css-syntax-config.ts";
-import { attributeConfig } from "./config/attribute-config.ts";
-import { tagDefinition } from "./config/tag-config.ts";
+import { cssAttributeConfig } from "./css/css-attributes-config.ts";
+import { cssSyntaxConfig } from "./css/css-syntax-config.ts";
+import { htmlAttributeConfig } from "./html/html-attribute-config.ts";
+import { htmlTagConfig } from "./html/html-tag-config.ts";
 
-export const HTML_GLOBAL_ATTRIBUTES = attributeConfig({
+export const HTML_GLOBAL_ATTRIBUTES = htmlAttributeConfig({
   id: "" as string | undefined,
   class: "" as string | undefined,
   style: "" as string | undefined,
@@ -36,7 +37,7 @@ export const HTML_GLOBAL_ATTRIBUTES = attributeConfig({
   role: "" as string | undefined,
 });
 
-export const HTML_TAG_DEFINITIONS = tagDefinition({
+export const HTML_TAG_DEFINITIONS = htmlTagConfig({
   a: {
     attributes: {
       href: "" as string,
@@ -221,4 +222,8 @@ export const CSS_SYNTAX = cssSyntaxConfig({
   "<percentage>": "" as `${bigint}%`,
   "<string>": "" as string,
   "<url>": "" as `url(${string})`,
+});
+
+export const CSS_ATTRIBUTES = cssAttributeConfig(CSS_SYNTAX, {
+  width: "<length> | check",
 });
