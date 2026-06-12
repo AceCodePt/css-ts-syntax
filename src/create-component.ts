@@ -1,22 +1,27 @@
-import type { PermissiveAttributeConfig } from "./config/attribute-config.ts";
-import { type PremissiveTagDefinition } from "./config/tag-config.ts";
-import type { Keyof, MakeUndefinedOptional, WidenObject } from "./types.ts";
+import type { BaseHTMLAttributeConfig } from "./html/html-attribute-config.ts";
+import type { BaseHTMLTagConfig } from "./html/html-tag-config.ts";
+import type {
+  Keyof,
+  MakeUndefinedOptional,
+  Simplify,
+  WidenObject,
+} from "./types.ts";
 
 type PermissiveSementicName = string;
 
 export type AnyComponentNode<
-  TagConfig extends PremissiveTagDefinition = PremissiveTagDefinition,
-  GlobalAttributeConfig extends PermissiveAttributeConfig =
-    PermissiveAttributeConfig,
+  TagConfig extends BaseHTMLTagConfig = BaseHTMLTagConfig,
+  GlobalAttributeConfig extends BaseHTMLAttributeConfig =
+    BaseHTMLAttributeConfig,
   Tag extends string = Keyof<TagConfig>,
 > = {
   [T in Tag]: PremissableComponentNode<TagConfig, GlobalAttributeConfig, T>;
 }[Tag];
 
 export type PremissableComponentNode<
-  TagConfig extends PremissiveTagDefinition = PremissiveTagDefinition,
-  GlobalAttributeConfig extends PermissiveAttributeConfig =
-    PermissiveAttributeConfig,
+  TagConfig extends BaseHTMLTagConfig = BaseHTMLTagConfig,
+  GlobalAttributeConfig extends BaseHTMLAttributeConfig =
+    BaseHTMLAttributeConfig,
   Tag extends Keyof<TagConfig> = Keyof<TagConfig>,
 > = {
   tag: Tag;
@@ -68,8 +73,8 @@ export type PremissableComponentNode<
 // };
 
 export function createComponent<
-  const TagConfig extends PremissiveTagDefinition,
-  const GlobalAttributeConfig extends PermissiveAttributeConfig,
+  const TagConfig extends BaseHTMLTagConfig,
+  const GlobalAttributeConfig extends BaseHTMLAttributeConfig,
   const T extends Keyof<TagConfig>,
   const Component extends PremissableComponentNode<
     TagConfig,
@@ -79,7 +84,7 @@ export function createComponent<
 >(
   _htmlTagAttributes: TagConfig,
   _globalAttributes: GlobalAttributeConfig,
-  node: { tag: T } & Component,
+  node: Simplify<{ tag: T } & Component>,
 ) {
   return node;
 }
