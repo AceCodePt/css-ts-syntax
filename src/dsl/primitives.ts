@@ -68,7 +68,7 @@ export function dslString<const DSL extends DSLString>(
 }
 
 function isSupportedPrimitive(s: string): s is SupportedPrimitivesUnion {
-  return (SUPPORTED_PRIMITIVES as readonly string[]).includes(s);
+  return SUPPORTED_PRIMITIVES.includes(s);
 }
 
 export function parseValueAgainstDSL<const DSL extends DSLString>(
