@@ -4,17 +4,18 @@
 	"description": "",
 	"main": "index.ts",
 	"type": "module",
-  "scripts": {
-    "test": "node --test",
-    "test:watch": "node --test --watch"
-  },
+	"scripts": {
+    "test": "tsc --noEmit && node --import=tsx/esm --test",
+		"test:watch": "node --import=tsx/esm --test --watch"
+	},
 	"keywords": [],
 	"author": "Sagi Carmel (https://github.com/AceCodePt)",
 	"license": "ISC",
 	"packageManager": "pnpm@10.33.3",
 	"devDependencies": {
+		"@total-typescript/ts-reset": "^0.6.1",
 		"@types/node": "^25.9.1",
-		"@total-typescript/ts-reset": "^0.6.1"
+		"tsx": "^4.22.4"
 	},
 	"dependencies": {
 		"typescript": "^6.0.3"
