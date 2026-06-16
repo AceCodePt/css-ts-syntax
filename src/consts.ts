@@ -202,7 +202,7 @@ export const HTML_TAG_DEFINITIONS = htmlTagConfig({
     innerHTML: ["th", "td"],
   },
   ul: {
-    innerHTML: ["li"],
+    innerHTML: ["li", "ol"],
   },
 });
 
