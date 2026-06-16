@@ -4,20 +4,20 @@ import {
   parseValueAgainstDSL,
   type DSLInfer,
 } from "@/dsl/primitives.ts";
-import { assertType, type Expect, type Equal } from "../type-utils.ts";
+import { assertType, type Equal } from "../type-utils.ts";
 import assert from "node:assert";
 
 describe("DSL basic functionality", () => {
   test("'string' of DSL parses a primitive string", () => {
     assert.strictEqual(parseValueAgainstDSL("string", ""), "");
     dslString("string");
-    assertType<Expect<Equal<DSLInfer<"string">, string>>>();
+    assertType<Equal<DSLInfer<"string">, string>>();
   });
 
   test("'number' of DSL parses a primitive number", () => {
     assert.strictEqual(parseValueAgainstDSL("number", 0), 0);
     dslString("number");
-    assertType<Expect<Equal<DSLInfer<"number">, number>>>();
+    assertType<Equal<DSLInfer<"number">, number>>();
   });
 
   test("'bigint' of DSL parses a primitive bigint", () => {
@@ -26,20 +26,56 @@ describe("DSL basic functionality", () => {
       BigInt("1"),
     );
     dslString("bigint");
-    assertType<Expect<Equal<DSLInfer<"bigint">, bigint>>>();
+    assertType<Equal<DSLInfer<"bigint">, bigint>>();
   });
 
   test("'boolean' of DSL parses a primitive boolean", () => {
     assert.strictEqual(parseValueAgainstDSL("boolean", true), true);
     assert.strictEqual(parseValueAgainstDSL("boolean", false), false);
     dslString("boolean");
-    assertType<Expect<Equal<DSLInfer<"boolean">, boolean>>>();
+    assertType<Equal<DSLInfer<"boolean">, boolean>>();
   });
 
   test("'undefined' of DSL parses a primitive undefined", () => {
     assert.strictEqual(parseValueAgainstDSL("undefined", undefined), undefined);
     dslString("undefined");
-    assertType<Expect<Equal<DSLInfer<"undefined">, undefined>>>();
+    assertType<Equal<DSLInfer<"undefined">, undefined>>();
+  });
+
+  test("'true' of DSL parses a literal true", () => {
+    assert.strictEqual(parseValueAgainstDSL("true", true), true);
+    dslString("true");
+    assertType<Equal<DSLInfer<"true">, true>>();
+  });
+
+  test("'false' of DSL parses a literal false", () => {
+    assert.strictEqual(parseValueAgainstDSL("false", false), false);
+    dslString("false");
+    assertType<Equal<DSLInfer<"false">, false>>();
+  });
+
+  test("0 of DSL parses a literal 0", () => {
+    assert.strictEqual(parseValueAgainstDSL("0", 0), 0);
+    dslString("0");
+    assertType<Equal<DSLInfer<"0">, 0>>();
+  });
+
+  test("'' of DSL parses a literal ''", () => {
+    assert.strictEqual(parseValueAgainstDSL("''", ""), "");
+    dslString("''");
+    assertType<Equal<DSLInfer<"''">, "">>();
+  });
+
+  test('"" of DSL parses a literal ""', () => {
+    assert.strictEqual(parseValueAgainstDSL('""', ""), "");
+    dslString('""');
+    assertType<Equal<DSLInfer<'""'>, "">>();
+  });
+
+  test("`` of DSL parses a literal ``", () => {
+    assert.strictEqual(parseValueAgainstDSL("``", ""), "");
+    dslString("``");
+    assertType<Equal<DSLInfer<"``">, "">>();
   });
 });
 
@@ -48,6 +84,30 @@ describe("DSL returns the value it was given", () => {
     assert.strictEqual(parseValueAgainstDSL("string", "hello"), "hello");
     assert.strictEqual(parseValueAgainstDSL("number", 42), 42);
     assert.strictEqual(parseValueAgainstDSL("bigint", 7n), 7n);
+  });
+
+  test("10 of DSL parses a literal 10", () => {
+    assert.strictEqual(parseValueAgainstDSL("10", 10), 10);
+    dslString("10");
+    assertType<Equal<DSLInfer<"10">, 10>>();
+  });
+
+  test("'a' of DSL parses a literal 'a'", () => {
+    assert.strictEqual(parseValueAgainstDSL("'a'", "a"), "a");
+    dslString("'a'");
+    assertType<Equal<DSLInfer<"'a'">, "a">>();
+  });
+
+  test('"a" of DSL parses a literal "a"', () => {
+    assert.strictEqual(parseValueAgainstDSL('"a"', "a"), "a");
+    dslString('"a"');
+    assertType<Equal<DSLInfer<'"a"'>, "a">>();
+  });
+
+  test("`a` of DSL parses a literal `a`", () => {
+    assert.strictEqual(parseValueAgainstDSL("`a`", "a"), "a");
+    dslString("`a`");
+    assertType<Equal<DSLInfer<"`a`">, "a">>();
   });
 });
 
@@ -86,7 +146,7 @@ describe("DSL union functionality", () => {
     assert.strictEqual(parseValueAgainstDSL("string | number", "hi"), "hi");
     assert.strictEqual(parseValueAgainstDSL("string | number", 5), 5);
     dslString("string | number");
-    assertType<Expect<Equal<DSLInfer<"string | number">, string | number>>>();
+    assertType<Equal<DSLInfer<"string | number">, string | number>>();
   });
 
   test("union throws when the value matches no member", () => {
@@ -103,9 +163,7 @@ describe("DSL union functionality", () => {
     // @ts-expect-error
     assert.throws(() => parseValueAgainstDSL("string | undefined", 0));
     dslString("string | undefined");
-    assertType<
-      Expect<Equal<DSLInfer<"string | undefined">, string | undefined>>
-    >();
+    assertType<Equal<DSLInfer<"string | undefined">, string | undefined>>();
   });
 
   test("three-member union", () => {
@@ -115,9 +173,7 @@ describe("DSL union functionality", () => {
     );
     dslString("string | undefined | boolean");
     assertType<
-      Expect<
-        Equal<DSLInfer<"string | number | boolean">, string | number | boolean>
-      >
+      Equal<DSLInfer<"string | number | boolean">, string | number | boolean>
     >();
   });
 
@@ -130,7 +186,7 @@ describe("DSL union functionality", () => {
   });
 });
 
-describe("DSL throws on malformed strings at runtime", () => {
+describe("DSL throws on malformed strings", () => {
   test("unknown primitive throws", () => {
     // @ts-expect-error
     dslString("xyz");
@@ -151,6 +207,16 @@ describe("DSL throws on malformed strings at runtime", () => {
     // @ts-expect-error
     assert.throws(() => parseValueAgainstDSL("", "hi"));
   });
+});
+
+describe("DSL complex backtick checks", () => {
+  test("backtick primitve support to string converstion `${number}`", () => {
+    dslString("`${number}`");
+    assert.strictEqual(parseValueAgainstDSL("`${number}`", "4"), "4");
+  });
+  test("", () => {});
+  test("", () => {});
+  test("", () => {});
 });
 
 describe("DSL error messages distinguish failure modes", () => {
