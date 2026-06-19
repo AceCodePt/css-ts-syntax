@@ -80,27 +80,25 @@ type DSLStringDelimiter<
         Maybe extends `${string}|${infer Other extends string}` ? Other : never,
         S
       >
-    : Trim<T> extends `${D}${infer Piped extends `${string}|${string}`}${D}`
-      ? SingleDSLValidate<`${D}${Piped}${D}`, never, S>
-      : Trim<T>;
+    : Trim<T>;
 
 export type DSLValidate<
   T extends string,
   S extends string = SupportedKeywordUnion,
 > =
-  Trim<T> extends `"${string}"` | `"${string}"${string}`
+  Trim<T> extends `"${string}"${string}`
     ? DSLStringDelimiter<T, '"', S>
-    : Trim<T> extends `'${string}'` | `'${string}'${string}`
+    : Trim<T> extends `'${string}'${string}`
       ? DSLStringDelimiter<T, "'", S>
-      : Trim<T> extends `\`${string}\`` | `\`${string}\`${string}`
+      : Trim<T> extends `\`${string}\`${string}`
         ? DSLStringDelimiter<T, "`", S>
         : T extends `${infer L extends string}|${infer R extends string}`
           ? SingleDSLValidate<L, R, S>
           : SingleDSLValidate<T, never, S>;
 
 type InferRestOfBackTick<S extends string> =
-  S extends `\$\{${infer innerDSL extends string}\}${infer Rest extends string}`
-    ? `${DSLInfer<innerDSL>}${InferRestOfBackTick<Rest>}`
+  S extends `${infer Before extends string}\$\{${infer innerDSL extends string}\}${infer Rest extends string}`
+    ? `${Before}${DSLInfer<innerDSL>}${InferRestOfBackTick<Rest>}`
     : `${S}`;
 
 type SingleDSLInfer<T extends string> = T extends keyof SupportedKeyword
@@ -114,9 +112,11 @@ type SingleDSLInfer<T extends string> = T extends keyof SupportedKeyword
         : never;
 
 export type DSLInfer<T extends DSLString> =
-  T extends `\`${infer Piped extends `${string}|${string}`}\`${infer Maybe extends string}`
-    ? Piped extends `\$\{${infer innerDSL extends string}\}`
-      ? `${DSLInfer<Trim<innerDSL>>}` | DSLInfer<Trim<Maybe>>
+  Trim<T> extends `\`${infer Piped extends `${string}|${string}`}\`${infer Maybe extends string}`
+    ? Piped extends `${infer Before extends string}\$\{${infer innerDSL extends string}\}${infer After extends string}`
+      ?
+          | `${Before}${DSLInfer<Trim<innerDSL>>}${InferRestOfBackTick<After>}`
+          | DSLInfer<Trim<Maybe>>
       : `${Piped}`
     : T extends
           | `"${infer Piped extends `${string}|${string}`}"${infer Maybe extends string}`
