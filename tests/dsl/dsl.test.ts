@@ -1,13 +1,9 @@
 import test, { describe } from "node:test";
-import {
-  dslString,
-  parseValueAgainstDSL,
-  type DSLInfer,
-} from "@/dsl/primitives.ts";
+import { dslString, parseValueAgainstDSL, type DSLInfer } from "@/dsl/index.ts";
 import { assertType, type Equal } from "../type-utils.ts";
 import assert from "node:assert";
 
-describe("DSL basic functionality", () => {
+describe("Primitive types", () => {
   test("'string' of DSL parses a primitive string", () => {
     assert.strictEqual(parseValueAgainstDSL("string", ""), "");
     dslString("string");
@@ -42,6 +38,14 @@ describe("DSL basic functionality", () => {
     assertType<Equal<DSLInfer<"undefined">, undefined>>();
   });
 
+  test("returns the same reference for objects-free primitives", () => {
+    assert.strictEqual(parseValueAgainstDSL("string", "hello"), "hello");
+    assert.strictEqual(parseValueAgainstDSL("number", 42), 42);
+    assert.strictEqual(parseValueAgainstDSL("bigint", 7n), 7n);
+  });
+});
+
+describe("Literal values", () => {
   test("'true' of DSL parses a literal true", () => {
     assert.strictEqual(parseValueAgainstDSL("true", true), true);
     dslString("true");
@@ -60,101 +64,124 @@ describe("DSL basic functionality", () => {
     assertType<Equal<DSLInfer<"0">, 0>>();
   });
 
-  test("'' of DSL parses a literal ''", () => {
-    assert.strictEqual(parseValueAgainstDSL("''", ""), "");
-    dslString("''");
-    assertType<Equal<DSLInfer<"''">, "">>();
-  });
-
-  test('"" of DSL parses a literal ""', () => {
-    assert.strictEqual(parseValueAgainstDSL('""', ""), "");
-    dslString('""');
-    assertType<Equal<DSLInfer<'""'>, "">>();
-  });
-
-  test("`` of DSL parses a literal ``", () => {
-    assert.strictEqual(parseValueAgainstDSL("``", ""), "");
-    dslString("``");
-    assertType<Equal<DSLInfer<"``">, "">>();
-  });
-});
-
-describe("DSL returns the value it was given", () => {
-  test("returns the same reference for objects-free primitives", () => {
-    assert.strictEqual(parseValueAgainstDSL("string", "hello"), "hello");
-    assert.strictEqual(parseValueAgainstDSL("number", 42), 42);
-    assert.strictEqual(parseValueAgainstDSL("bigint", 7n), 7n);
-  });
-
   test("10 of DSL parses a literal 10", () => {
     assert.strictEqual(parseValueAgainstDSL("10", 10), 10);
     dslString("10");
     assertType<Equal<DSLInfer<"10">, 10>>();
   });
+});
 
-  test("'a' of DSL parses a literal 'a'", () => {
-    assert.strictEqual(parseValueAgainstDSL("'a'", "a"), "a");
-    dslString("'a'");
-    assertType<Equal<DSLInfer<"'a'">, "a">>();
+describe("Quoted string literals", () => {
+  describe("single quotes ''", () => {
+    test("'' of DSL parses a literal ''", () => {
+      assert.strictEqual(parseValueAgainstDSL("''", ""), "");
+      dslString("''");
+      assertType<Equal<DSLInfer<"''">, "">>();
+    });
+
+    test("'a' of DSL parses a literal 'a'", () => {
+      assert.strictEqual(parseValueAgainstDSL("'a'", "a"), "a");
+      dslString("'a'");
+      assertType<Equal<DSLInfer<"'a'">, "a">>();
+    });
+
+    test("'|' of DSL parses a literal '|'", () => {
+      assert.strictEqual(parseValueAgainstDSL("'|'", "|"), "|");
+      dslString("'|'");
+      assertType<Equal<DSLInfer<"'|'">, "|">>();
+    });
+
+    test("`'|'` of DSL parses a literal `'|'`", () => {
+      assert.strictEqual(parseValueAgainstDSL("`'|'`", "'|'"), "'|'");
+      dslString("`'|'`");
+      assertType<Equal<DSLInfer<"`'|'`">, "'|'">>();
+    });
   });
 
-  test('"a" of DSL parses a literal "a"', () => {
-    assert.strictEqual(parseValueAgainstDSL('"a"', "a"), "a");
-    dslString('"a"');
-    assertType<Equal<DSLInfer<'"a"'>, "a">>();
+  describe('double quotes ""', () => {
+    test('"" of DSL parses a literal ""', () => {
+      assert.strictEqual(parseValueAgainstDSL('""', ""), "");
+      dslString('""');
+      assertType<Equal<DSLInfer<'""'>, "">>();
+    });
+
+    test('"a" of DSL parses a literal "a"', () => {
+      assert.strictEqual(parseValueAgainstDSL('"a"', "a"), "a");
+      dslString('"a"');
+      assertType<Equal<DSLInfer<'"a"'>, "a">>();
+    });
+
+    test('"|" of DSL parses a literal "|"', () => {
+      assert.strictEqual(parseValueAgainstDSL('"|"', "|"), "|");
+      dslString('"|"');
+      assertType<Equal<DSLInfer<'"|"'>, "|">>();
+    });
+
+    test('`"|"` of DSL parses a literal `"|"`', () => {
+      assert.strictEqual(parseValueAgainstDSL('`"|"`', '"|"'), '"|"');
+      dslString('`"|"`');
+      assertType<Equal<DSLInfer<'`"|"`'>, '"|"'>>();
+    });
   });
 
-  test("`a` of DSL parses a literal `a`", () => {
-    assert.strictEqual(parseValueAgainstDSL("`a`", "a"), "a");
-    dslString("`a`");
-    assertType<Equal<DSLInfer<"`a`">, "a">>();
+  describe("backticks ``", () => {
+    test("`` of DSL parses a literal ``", () => {
+      assert.strictEqual(parseValueAgainstDSL("``", ""), "");
+      dslString("``");
+      assertType<Equal<DSLInfer<"``">, "">>();
+    });
+
+    test("`a` of DSL parses a literal `a`", () => {
+      assert.strictEqual(parseValueAgainstDSL("`a`", "a"), "a");
+      dslString("`a`");
+      assertType<Equal<DSLInfer<"`a`">, "a">>();
+    });
+
+    test("`|` of DSL parses a literal `|`", () => {
+      assert.strictEqual(parseValueAgainstDSL("`|`", "|"), "|");
+      dslString("`|`");
+      assertType<Equal<DSLInfer<"`|`">, "|">>();
+    });
+
+    test("'`|`' of DSL parses a literal '`|`'", () => {
+      assert.strictEqual(parseValueAgainstDSL("'`|`'", "`|`"), "`|`");
+      dslString("'`|`'");
+      assertType<Equal<DSLInfer<"'`|`'">, "`|`">>();
+    });
+
+    test("`${number}${'%'}` of DSL parses a literal '1%'", () => {
+      assert.strictEqual(parseValueAgainstDSL("`${number}${'%'}`", "1%"), "1%");
+      dslString("`${number}${'%'}`");
+      assertType<Equal<DSLInfer<"`${number}${'%'}`">, `${number}%`>>();
+    });
+
+    test("`${number}${'px' | '%'}`' of DSL parses a literal '1px'", () => {
+      assert.strictEqual(
+        parseValueAgainstDSL("`${number}${'px' | '%'}`", "1px"),
+        "1px",
+      );
+      dslString("`${number}${'px' | '%'}`");
+      assertType<
+        Equal<DSLInfer<"`${number}${'px' | '%'}`">, `${number}${"px" | "%"}`>
+      >();
+    });
   });
 });
 
-describe("DSL throws on mismatched primitives", () => {
-  test("'string' throws for non-strings", () => {
-    // @ts-expect-error
-    assert.throws(() => parseValueAgainstDSL("string", 0));
-    // @ts-expect-error
-    assert.throws(() => parseValueAgainstDSL("string", true));
-    // @ts-expect-error
-    assert.throws(() => parseValueAgainstDSL("string", undefined));
-  });
-
-  test("'number' throws for non-numbers", () => {
-    // @ts-expect-error
-    assert.throws(() => parseValueAgainstDSL("number", "0"));
-    // @ts-expect-error
-    assert.throws(() => parseValueAgainstDSL("number", BigInt("0")));
-  });
-
-  test("'undefined' throws for null", () => {
-    // @ts-expect-error
-    assert.throws(() => parseValueAgainstDSL("undefined", null));
-  });
-
-  test("'boolean' throws for truthy/falsy non-booleans", () => {
-    // @ts-expect-error
-    assert.throws(() => parseValueAgainstDSL("boolean", 1));
-    // @ts-expect-error
-    assert.throws(() => parseValueAgainstDSL("boolean", ""));
-  });
-});
-
-describe("DSL union functionality", () => {
-  test("union returns the value when it matches any member", () => {
+describe("Union types", () => {
+  test("returns the value when it matches any member", () => {
     assert.strictEqual(parseValueAgainstDSL("string | number", "hi"), "hi");
     assert.strictEqual(parseValueAgainstDSL("string | number", 5), 5);
     dslString("string | number");
     assertType<Equal<DSLInfer<"string | number">, string | number>>();
   });
 
-  test("union throws when the value matches no member", () => {
+  test("throws when the value matches no member", () => {
     // @ts-expect-error
     assert.throws(() => parseValueAgainstDSL("string | number", true));
   });
 
-  test("union with undefined", () => {
+  test("with undefined", () => {
     assert.strictEqual(
       parseValueAgainstDSL("string | undefined", undefined),
       undefined,
@@ -186,53 +213,75 @@ describe("DSL union functionality", () => {
   });
 });
 
-describe("DSL throws on malformed strings", () => {
-  test("unknown primitive throws", () => {
-    // @ts-expect-error
-    dslString("xyz");
-    // @ts-expect-error
-    assert.throws(() => parseValueAgainstDSL("xyz", "hi"));
-  });
-
-  test("partially-valid union throws", () => {
-    // @ts-expect-error
-    dslString("string | xyz");
-    // @ts-expect-error
-    assert.throws(() => parseValueAgainstDSL("string | xyz", "hi"));
-  });
-
-  test("empty string throws", () => {
-    // @ts-expect-error
-    dslString("");
-    // @ts-expect-error
-    assert.throws(() => parseValueAgainstDSL("", "hi"));
-  });
-});
-
-describe("DSL complex backtick checks", () => {
-  test("backtick primitve support to string converstion `${number}`", () => {
-    dslString("`${number}`");
-    assert.strictEqual(parseValueAgainstDSL("`${number}`", "4"), "4");
-  });
-  test("", () => {});
-  test("", () => {});
-  test("", () => {});
-});
-
-describe("DSL error messages distinguish failure modes", () => {
-  test("malformed DSL error mentions the DSL string", () => {
-    assert.throws(
+describe("Error handling", () => {
+  describe("type mismatches", () => {
+    test("'string' throws for non-strings", () => {
       // @ts-expect-error
-      () => parseValueAgainstDSL("xyz", "hi"),
-      /Invalid DSL string/,
-    );
+      assert.throws(() => parseValueAgainstDSL("string", 0));
+      // @ts-expect-error
+      assert.throws(() => parseValueAgainstDSL("string", true));
+      // @ts-expect-error
+      assert.throws(() => parseValueAgainstDSL("string", undefined));
+    });
+
+    test("'number' throws for non-numbers", () => {
+      // @ts-expect-error
+      assert.throws(() => parseValueAgainstDSL("number", "0"));
+      // @ts-expect-error
+      assert.throws(() => parseValueAgainstDSL("number", BigInt("0")));
+    });
+
+    test("'undefined' throws for null", () => {
+      // @ts-expect-error
+      assert.throws(() => parseValueAgainstDSL("undefined", null));
+    });
+
+    test("'boolean' throws for truthy/falsy non-booleans", () => {
+      // @ts-expect-error
+      assert.throws(() => parseValueAgainstDSL("boolean", 1));
+      // @ts-expect-error
+      assert.throws(() => parseValueAgainstDSL("boolean", ""));
+    });
   });
 
-  test("value mismatch error mentions the mismatch", () => {
-    assert.throws(
+  describe("malformed DSL", () => {
+    test("unknown primitive throws", () => {
       // @ts-expect-error
-      () => parseValueAgainstDSL("string", 5),
-      /does not match DSL/,
-    );
+      dslString("xyz");
+      // @ts-expect-error
+      assert.throws(() => parseValueAgainstDSL("xyz", "hi"));
+    });
+
+    test("partially-valid union throws", () => {
+      // @ts-expect-error
+      dslString("string | xyz");
+      // @ts-expect-error
+      assert.throws(() => parseValueAgainstDSL("string | xyz", "hi"));
+    });
+
+    test("empty string throws", () => {
+      // @ts-expect-error
+      dslString("");
+      // @ts-expect-error
+      assert.throws(() => parseValueAgainstDSL("", "hi"));
+    });
+  });
+
+  describe("error messages", () => {
+    test("malformed DSL error mentions the DSL string", () => {
+      assert.throws(
+        // @ts-expect-error
+        () => parseValueAgainstDSL("xyz", "hi"),
+        /Invalid DSL string/,
+      );
+    });
+
+    test("value mismatch error mentions the mismatch", () => {
+      assert.throws(
+        // @ts-expect-error
+        () => parseValueAgainstDSL("string", 5),
+        /does not match DSL/,
+      );
+    });
   });
 });
