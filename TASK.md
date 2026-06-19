@@ -33,6 +33,43 @@
 - - [x] Parse
 - - [x] Test
 
+- [ ] Union Type - |
+- - [x] Union Type with Primitives - string | number | bigint | boolean | undefined
+- - - [x] Type Validation
+- - - [x] Type Infrence
+- - - [x] Runtime Validation
+- - - [x] Parse
+- - - [x] Test
+
+- - [x] Union Type with Literal Value
+- - - [x] Boolean Literal
+- - - - [x] Type Validation
+- - - - [x] Type Infrence
+- - - - [x] Runtime Validation
+- - - - [x] Parse
+- - - - [x] Test
+
+- - - [x] Number Literal
+- - - - [x] Type Validation
+- - - - [x] Type Infrence
+- - - - [x] Runtime Validation
+- - - - [x] Parse
+- - - - [x] Test
+
+- - - [x] String Literal
+- - - - [x] Type Validation
+- - - - [x] Type Infrence
+- - - - [x] Runtime Validation
+- - - - [x] Parse
+- - - - [x] Test
+
+- - [x] Complex union - true | 0 | 'a' | `b` | undefined | "c"
+- - - [x] Type Validation
+- - - [x] Type Infrence
+- - - [x] Runtime Validation
+- - - [x] Parse
+- - - [x] Test
+
 - [x] Literal String with pipe - '|' "|" `|`
 - - [x] Type Validation
 - - [x] Type Infrence
@@ -41,13 +78,6 @@
 - - [x] Test
 
 - [x] Template literal with pipe - `|`
-- - [x] Type Validation
-- - [x] Type Infrence
-- - [x] Runtime Validation
-- - [x] Parse
-- - [x] Test
-
-- [x] Template literal with escape for Primitives - `${string | number}`
 - - [x] Type Validation
 - - [x] Type Infrence
 - - [x] Runtime Validation
