@@ -24,123 +24,124 @@ const SUPPORTED_LITERALS = {
   false: false,
 } as const;
 
-export type SupportedKeywords = typeof SUPPORTED_PRIMITIVES &
-  typeof SUPPORTED_LITERALS;
+export const SUPPORTED_KEYWORDS = Object.assign(
+  {},
+  SUPPORTED_PRIMITIVES,
+  SUPPORTED_LITERALS,
+);
+
+export type SupportedKeywords = typeof SUPPORTED_KEYWORDS;
 
 export type DSLString = string;
 
 // Small note: the never for R is critical
 // See example: dslString("string |") and auto complete after the pipe
 type PipeWhenExists<
+  S extends Record<string, any>,
   L extends string | number,
   R extends string | never = never,
-  S extends Record<string, any> = SupportedKeywords,
 > = [R] extends [never]
   ? Trim<`${L}`>
-  : `${Trim<`${L}`>} | ${DSLValidate<R, S>}`;
+  : `${Trim<`${L}`>} | ${DSLValidate<S, R>}`;
 
 type ValidateRestOfBackTick<
+  S extends Record<string, any>,
   Str extends string | never,
-  S extends Record<string, any> = SupportedKeywords,
 > = Str extends `\$\{${infer innerDSL extends string}\}${infer Maybe extends string}`
-  ? `\${${Trim<DSLValidate<innerDSL, S>>}}${ValidateRestOfBackTick<Maybe, S>}`
+  ? `\${${Trim<DSLValidate<S, innerDSL>>}}${ValidateRestOfBackTick<S, Maybe>}`
   : `${Str}`;
 
 type SingleDSLValidate<
+  S extends Record<string, any>,
   L extends string,
   R extends string,
-  S extends Record<string, any> = SupportedKeywords,
 > =
   Trim<L> extends `${infer N extends number}`
-    ? PipeWhenExists<N, R, S>
+    ? PipeWhenExists<S, N, R>
     : Trim<L> extends `\`${infer Str extends string}\``
-      ? PipeWhenExists<`\`${ValidateRestOfBackTick<Str, S>}\``, R, S>
+      ? PipeWhenExists<S, `\`${ValidateRestOfBackTick<S, Str>}\``, R>
       : Trim<L> extends `'${string}'` | `"${string}"`
-        ? PipeWhenExists<L, R, S>
+        ? PipeWhenExists<S, L, R>
         : [Extract<keyof S, `${Trim<L>}${string}`>] extends [string]
-          ? PipeWhenExists<Extract<keyof S, `${Trim<L>}${string}`>, R, S>
+          ? PipeWhenExists<S, Extract<keyof S, `${Trim<L>}${string}`>, R>
           : `'${Trim<L>}' is not supported`;
 
 type DSLStringDelimiter<
+  S extends Record<string, any>,
   T extends string,
   D extends string,
-  S extends Record<string, any> = SupportedKeywords,
 > =
   Trim<T> extends `${D}${infer Piped extends `${string}|${string}`}${D}${infer Maybe extends string}`
     ? SingleDSLValidate<
+        S,
         `${D}${Piped}${D}`,
         // We only pass the right side of the pipe so we get autocomplete
-        Maybe extends `${string}|${infer Other extends string}` ? Other : never,
-        S
+        Maybe extends `${string}|${infer Other extends string}` ? Other : never
       >
     : T extends `${infer L extends string}|${infer R extends string}`
-      ? SingleDSLValidate<L, R, S>
-      : SingleDSLValidate<T, never, S>;
+      ? SingleDSLValidate<S, L, R>
+      : SingleDSLValidate<S, T, never>;
 
-export type DSLValidate<
-  T extends string,
-  S extends Record<string, any> = SupportedKeywords,
-> =
+export type DSLValidate<S extends Record<string, any>, T extends string> =
   Trim<T> extends `"${string}"${string}`
-    ? DSLStringDelimiter<T, '"', S>
+    ? DSLStringDelimiter<S, T, '"'>
     : Trim<T> extends `'${string}'${string}`
-      ? DSLStringDelimiter<T, "'", S>
+      ? DSLStringDelimiter<S, T, "'">
       : Trim<T> extends `\`${string}\`${string}`
-        ? DSLStringDelimiter<T, "`", S>
+        ? DSLStringDelimiter<S, T, "`">
         : T extends `${infer L extends string}|${infer R extends string}`
-          ? SingleDSLValidate<L, R, S>
-          : SingleDSLValidate<T, never, S>;
+          ? SingleDSLValidate<S, L, R>
+          : SingleDSLValidate<S, T, never>;
 
-// type Check = DSLValidate<"`${number}${'px' | 'h'}`">;
+type InferRestOfBackTick<
+  Keywords extends Record<string, any>,
+  Str extends string,
+> = Str extends `${infer Before extends string}\$\{${infer innerDSL extends string}\}${infer Rest extends string}`
+  ? `${Before}${DSLInfer<Keywords, innerDSL>}${InferRestOfBackTick<Keywords, Rest>}`
+  : `${Str}`;
 
-type InferRestOfBackTick<S extends string> =
-  S extends `${infer Before extends string}\$\{${infer innerDSL extends string}\}${infer Rest extends string}`
-    ? `${Before}${DSLInfer<innerDSL>}${InferRestOfBackTick<Rest>}`
-    : `${S}`;
-
-type SingleDSLInfer<T extends string> = T extends keyof SupportedKeywords
-  ? SupportedKeywords[T]
-  : T extends `${infer N extends number}`
+type SingleDSLInfer<
+  Keywords extends Record<string, any>,
+  Text extends string,
+> = Text extends keyof Keywords
+  ? Keywords[Text]
+  : Text extends `${infer N extends number}`
     ? N
-    : T extends `\`${infer S extends string}\``
-      ? InferRestOfBackTick<S>
-      : T extends `'${infer S extends string}'` | `"${infer S extends string}"`
-        ? S
+    : Text extends `\`${infer Str extends string}\``
+      ? InferRestOfBackTick<Keywords, Str>
+      : Text extends
+            | `'${infer Str extends string}'`
+            | `"${infer Str extends string}"`
+        ? Str
         : never;
 
-export type DSLInfer<T extends DSLString> =
-  Trim<T> extends `\`${infer Piped extends `${string}|${string}`}\`${infer Maybe extends string}`
+export type DSLInfer<
+  Keywords extends Record<string, any>,
+  Text extends DSLString,
+> =
+  Trim<Text> extends `\`${infer Piped extends `${string}|${string}`}\`${infer Maybe extends string}`
     ? Piped extends `${infer Before extends string}\$\{${infer innerDSL extends string}\}${infer After extends string}`
       ?
-          | `${Before}${DSLInfer<Trim<innerDSL>>}${InferRestOfBackTick<After>}`
-          | DSLInfer<Trim<Maybe>>
+          | `${Before}${DSLInfer<Keywords, Trim<innerDSL>>}${InferRestOfBackTick<Keywords, After>}`
+          | DSLInfer<Keywords, Trim<Maybe>>
       : `${Piped}`
-    : T extends
+    : Text extends
           | `"${infer Piped extends `${string}|${string}`}"${infer Maybe extends string}`
           | `'${infer Piped extends `${string}|${string}`}'${infer Maybe extends string}`
-      ? `${Piped}` | DSLInfer<Maybe>
-      : T extends `${infer L}|${infer R}`
-        ? SingleDSLInfer<Trim<L>> | DSLInfer<Trim<R>>
-        : SingleDSLInfer<Trim<T>>;
+      ? `${Piped}` | DSLInfer<Keywords, Maybe>
+      : Text extends `${infer L}|${infer R}`
+        ? SingleDSLInfer<Keywords, Trim<L>> | DSLInfer<Keywords, Trim<R>>
+        : SingleDSLInfer<Keywords, Trim<Text>>;
 
-// type X = DSLInfer<"'|' | \"|\" | `|` | `${'|'}`">;
-// type X = DSLInfer<`'"|"' | 1`>;
+export function dslString<
+  const Keywords extends Record<string, any>,
+  const DSL extends DSLString,
+>(_supportedKeywords: Keywords, dslString: DSLValidate<Keywords, DSL>) {
+  const parts = dslString.split("|").map((p) => p.trim());
 
-// function isSupportedKeyword(s: string): s is SupportedKeywordUnion {
-//   return (
-//     Object.keys(SUPPORTED_PRIMITIVES).includes(s) ||
-//     Object.keys(SUPPORTED_LITERALS).includes(s)
-//   );
-// }
-
-export function dslString<const DSL extends DSLString>(
-  dslString: DSLValidate<DSL>,
-) {
-  // const parts = dslString.split("|").map((p) => p.trim());
-
-  // if (parts.length === 0) {
-  //   throw new Error(`Invalid DSL string: "${dslString}"`);
-  // }
+  if (parts.length === 0) {
+    throw new Error(`Invalid DSL string: "${dslString}"`);
+  }
   return dslString;
 }
 
@@ -176,20 +177,25 @@ function splitOutsideQuotes(dslString: string) {
   return parts;
 }
 
-export function parseValueAgainstDSL<const DSL extends DSLString>(
-  dslString: DSLValidate<DSL>,
-  checkAgainst: DSLInfer<DSL>,
-): DSLInfer<DSL> {
+export function parseValueAgainstDSL<
+  const Keywords extends Record<string, any>,
+  const DSL extends DSLString,
+>(
+  supportedKeywords: Keywords, // { boolean: true, number: 0, true: true }
+  dslString: DSLValidate<Keywords, DSL>, // 'true'
+  checkAgainst: DSLInfer<Keywords, DSL>, // 'true'
+): DSLInfer<Keywords, DSL> {
   const parts = splitOutsideQuotes(dslString).map((p) => p.trim());
 
   const matches = parts.some(
     (part) =>
-      // This is for general types like string, undefined
-      typeof checkAgainst === part ||
+      // This checkes the actual typeof
+      (part in supportedKeywords &&
+        typeof checkAgainst === typeof supportedKeywords[part]) ||
       // This for literals like true, false
-      (part in SUPPORTED_LITERALS &&
-        SUPPORTED_LITERALS[part as keyof typeof SUPPORTED_LITERALS] ===
-          checkAgainst) ||
+      (`${checkAgainst}` === part &&
+        part in supportedKeywords &&
+        checkAgainst === supportedKeywords[part]) ||
       // This is for numbers
       (!Number.isNaN(+part) && +part === checkAgainst) ||
       // This is for string / backticks / whatever
@@ -202,5 +208,5 @@ export function parseValueAgainstDSL<const DSL extends DSLString>(
     );
   }
 
-  return checkAgainst as DSLInfer<DSL>;
+  return checkAgainst as DSLInfer<Keywords, DSL>;
 }
