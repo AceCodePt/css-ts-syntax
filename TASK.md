@@ -115,14 +115,29 @@
 - - - [ ] Parse
 - - - [ ] Test
 
+- - [ ] Fails on partially parsable union "'xyz' | xyz"
+- - - [ ] Type Validation
+- - - [ ] Type Inference
+- - - [ ] Runtime Validation
+- - - [ ] Parse
+- - - [ ] Test
+
+- - [ ] Fails on partially parsable union "'xyz' | xyz"
+- - - [ ] Type Validation
+- - - [ ] Type Inference
+- - - [ ] Runtime Validation
+- - - [ ] Parse
+- - - [ ] Test
+
 
 ## HTML Attributes
-### Type Validation
-- [x] Have html attribute config support type check of DSL 
-- [x] Have html attribute tag support type check of DSL 
-- [x] Have css syntax support type check of DSL 
-- [ ] Have css 
-### Variations
+- [x] Type Validation
+- [x] Type Inference
+- [ ] Runtime Validation
+- [ ] Parse
+- [ ] Test
+- [x] Variations
+
 ## HTML Tags
 ### Variations
 ## CSS Syntax
