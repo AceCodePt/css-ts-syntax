@@ -349,23 +349,131 @@ describe("Union Type (|)", () => {
   });
 });
 
-describe("Quoted string literals", () => {
-  describe("backticks ``", () => {
-    test("`${number}${'%'}` of DSL parses a literal '1%'", () => {
-      assert.strictEqual(parseValueAgainstDSL("`${number}${'%'}`", "1%"), "1%");
-      dslString("`${number}${'%'}`");
-      assertType<Equal<DSLInfer<"`${number}${'%'}`">, `${number}%`>>();
-    });
-
-    test("`${number}${'px' | '%'}`' of DSL parses a literal '1px'", () => {
-      assert.strictEqual(
-        parseValueAgainstDSL("`${number}${'px' | '%'}`", "1px"),
-        "1px",
-      );
-      dslString("`${number}${'px' | '%'}`");
+describe("Template literal with pipe - `${ }`", () => {
+  describe("Primitive types", () => {
+    test("Type Infrence", () => {
       assertType<
-        Equal<DSLInfer<"`${number}${'px' | '%'}`">, `${number}${"px" | "%"}`>
+        Equal<
+          DSLInfer<"`${string | number | bigint | boolean | undefined}`">,
+          `${string | number | bigint | boolean | undefined}`
+        >
       >();
+    });
+    test("Runtime Validation", () => {
+      dslString("`${string | number | bigint | boolean | undefined}`");
+    });
+    test("Parse", () => {
+      assert.strictEqual(
+        parseValueAgainstDSL(
+          "`${string | number | bigint | boolean | undefined}`",
+          "",
+        ),
+        "",
+      );
+      assert.strictEqual(
+        parseValueAgainstDSL(
+          "`${string | number | bigint | boolean | undefined}`",
+          "1.1",
+        ),
+        "1.1",
+      );
+      assert.strictEqual(
+        parseValueAgainstDSL(
+          "`${string | number | bigint | boolean | undefined}`",
+          "1",
+        ),
+        "1",
+      );
+      assert.strictEqual(
+        parseValueAgainstDSL(
+          "`${string | number | bigint | boolean | undefined}`",
+          "true",
+        ),
+        "true",
+      );
+      assert.strictEqual(
+        parseValueAgainstDSL(
+          "`${string | number | bigint | boolean | undefined}`",
+          "undefined",
+        ),
+        "undefined",
+      );
+    });
+  });
+
+  describe(`Literals - true, 0, "foo", 'bar'`, () => {
+    test("Type Infrence", () => {
+      assertType<
+        Equal<
+          DSLInfer<"`${true | 0 | \"foo\" | 'bar'}`">,
+          `${true | 0 | "foo" | "bar"}`
+        >
+      >();
+    });
+    test("Runtime Validation", () => {
+      dslString("`${true | 0 | \"foo\" | 'bar'}`");
+    });
+    test("Parse", () => {
+      assert.strictEqual(
+        parseValueAgainstDSL("`${true | 0 | \"foo\" | 'bar'}`", "true"),
+        "true",
+      );
+      assert.strictEqual(
+        parseValueAgainstDSL("`${true | 0 | \"foo\" | 'bar'}`", "0"),
+        "0",
+      );
+      assert.strictEqual(
+        parseValueAgainstDSL("`${true | 0 | \"foo\" | 'bar'}`", "foo"),
+        "foo",
+      );
+      assert.strictEqual(
+        parseValueAgainstDSL("`${true | 0 | \"foo\" | 'bar'}`", "bar"),
+        "bar",
+      );
+    });
+  });
+
+  describe("Complex Multi `before${'a' | 'b'}mid${1 | 2}end`", () => {
+    test("Type Infrence", () => {
+      assertType<
+        Equal<
+          DSLInfer<'`before${"a" | "b"}mid${1 | 2}end`'>,
+          `before${"a" | "b"}mid${1 | 2}end`
+        >
+      >();
+    });
+    test("Runtime Validation", () => {
+      dslString('`before${"a" | "b"}mid${1 | 2}end`');
+    });
+    test("Parse", () => {
+      assert.strictEqual(
+        parseValueAgainstDSL(
+          '`before${"a" | "b"}mid${1 | 2}end`',
+          "beforeamid1end",
+        ),
+        "beforeamid1end",
+      );
+      assert.strictEqual(
+        parseValueAgainstDSL(
+          '`before${"a" | "b"}mid${1 | 2}end`',
+          "beforebmid1end",
+        ),
+        "beforebmid1end",
+      );
+      assert.strictEqual(
+        parseValueAgainstDSL(
+          '`before${"a" | "b"}mid${1 | 2}end`',
+          "beforeamid2end",
+        ),
+        "beforeamid2end",
+      );
+      assert.strictEqual(
+        parseValueAgainstDSL(
+          '`before${"a" | "b"}mid${1 | 2}end`',
+          "beforebmid2end",
+        ),
+        "beforebmid2end",
+      );
     });
   });
 });
