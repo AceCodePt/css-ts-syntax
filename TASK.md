@@ -33,7 +33,14 @@
 - - [x] Parse
 - - [x] Test
 
-- [ ] Union Type - |
+- [x] Literal String with pipe - '|' \"|\" `|` [EDGE CASE]
+- - [x] Type Validation
+- - [x] Type Infrence
+- - [x] Runtime Validation
+- - [x] Parse
+- - [x] Test
+
+- [x] Union Type - |
 - - [x] Union Type with Primitives - string | number | bigint | boolean | undefined
 - - - [x] Type Validation
 - - - [x] Type Infrence
@@ -70,29 +77,41 @@
 - - - [x] Parse
 - - - [x] Test
 
-- [x] Literal String with pipe - '|' "|" `|`
-- - [x] Type Validation
-- - [x] Type Infrence
-- - [x] Runtime Validation
-- - [x] Parse
-- - [x] Test
+- [x] Template literal - `${ }`
+- - [x] Primitives - string, number, bigint, boolean, undefined,
+- - - [x] Type Validation
+- - - [x] Type Infrence
+- - - [x] Runtime Validation
+- - - [x] Parse
+- - - [x] Test
 
-- [x] Template literal with pipe - `|`
-- - [x] Type Validation
-- - [x] Type Infrence
-- - [x] Runtime Validation
-- - [x] Parse
-- - [x] Test
+- - [x] Literals - true, 0, "foo", 'bar'
+- - - [x] Type Validation
+- - - [x] Type Infrence
+- - - [x] Runtime Validation
+- - - [x] Parse
+- - - [x] Test
+
+
+- - [x] Complex Multi `before${'a' | 'b'}mid${1 | 2}end`
+- - - [x] Type Validation
+- - - [x] Type Infrence
+- - - [x] Runtime Validation
+- - - [x] Parse
+- - - [x] Test
+ 
+- - [ ] Template literal - `\`${number | string}\`` EDGE CASE
+- - - [ ] Type Validation
+- - - [ ] Type Infrence
+- - - [ ] Runtime Validation
+- - - [ ] Parse
+- - - [ ] Test
 
 - [ ] Template literal with escape for Literals - `${true | number}`
 - [ ] Template literal with escape for Number - `${0 | 1}`
 - [ ] Template literal with escape for Literal String - `${""|''}`
 - [ ] Template literal with escape for Literal String - \`${\`\`}`
 - [ ] Template literal with escape for Literal String - `${true | number}`
-### Type Infrence
-### Parse
-### Test
-### Variations
 
 ## HTML Attributes
 ### Type Validation
