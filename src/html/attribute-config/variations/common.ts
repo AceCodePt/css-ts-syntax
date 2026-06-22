@@ -8,4 +8,5 @@ export default htmlAttributeConfig({
   lang: "string | undefined",
   dir: "'ltr' | 'rtl' | 'auto' | undefined",
   tabindex: "number | undefined",
+  role: "string | undefined",
 });
