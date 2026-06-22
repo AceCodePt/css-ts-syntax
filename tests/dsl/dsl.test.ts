@@ -5,7 +5,7 @@ import assert from "node:assert";
 
 describe("Primitive types", () => {
   describe("string", () => {
-    test("Type Infrence", () => {
+    test("Type Inference", () => {
       assertType<Equal<DSLInfer<"string">, string>>();
     });
     test("Runtime Validation", () => {
@@ -17,7 +17,7 @@ describe("Primitive types", () => {
   });
 
   describe("number", () => {
-    test("Type Infrence", () => {
+    test("Type Inference", () => {
       assertType<Equal<DSLInfer<"number">, number>>();
     });
     test("Runtime Validation", () => {
@@ -29,7 +29,7 @@ describe("Primitive types", () => {
   });
 
   describe("bigint", () => {
-    test("Type Infrence", () => {
+    test("Type Inference", () => {
       assertType<Equal<DSLInfer<"bigint">, bigint>>();
     });
     test("Runtime Validation", () => {
@@ -44,7 +44,7 @@ describe("Primitive types", () => {
   });
 
   describe("boolean", () => {
-    test("Type Infrence", () => {
+    test("Type Inference", () => {
       assertType<Equal<DSLInfer<"boolean">, boolean>>();
     });
     test("Runtime Validation", () => {
@@ -57,7 +57,7 @@ describe("Primitive types", () => {
   });
 
   describe("undefined", () => {
-    test("Type Infrence", () => {
+    test("Type Inference", () => {
       assertType<Equal<DSLInfer<"undefined">, undefined>>();
     });
     test("Runtime Validation", () => {
@@ -81,7 +81,7 @@ describe("Primitive types", () => {
 describe("Literals", () => {
   describe("Literal Boolean", () => {
     describe("true", () => {
-      test("Type Infrence", () => {
+      test("Type Inference", () => {
         assertType<Equal<DSLInfer<"true">, true>>();
       });
       test("Runtime Validation", () => {
@@ -93,7 +93,7 @@ describe("Literals", () => {
     });
 
     describe("false", () => {
-      test("Type Infrence", () => {
+      test("Type Inference", () => {
         assertType<Equal<DSLInfer<"false">, false>>();
       });
       test("Runtime Validation", () => {
@@ -107,7 +107,7 @@ describe("Literals", () => {
 
   describe("Literal Number", () => {
     describe("0, 1", () => {
-      test("Type Infrence", () => {
+      test("Type Inference", () => {
         assertType<Equal<DSLInfer<"0">, 0>>();
         assertType<Equal<DSLInfer<"1">, 1>>();
       });
@@ -124,7 +124,7 @@ describe("Literals", () => {
 
   describe("Literal Strings", () => {
     describe("Single Quote ('')", () => {
-      test("Type Infrence", () => {
+      test("Type Inference", () => {
         assertType<Equal<DSLInfer<"''">, "">>();
         assertType<Equal<DSLInfer<"'a'">, "a">>();
       });
@@ -139,7 +139,7 @@ describe("Literals", () => {
     });
 
     describe('Double Quote ("")', () => {
-      test("Type Infrence", () => {
+      test("Type Inference", () => {
         assertType<Equal<DSLInfer<'""'>, "">>();
         assertType<Equal<DSLInfer<'"a"'>, "a">>();
       });
@@ -154,7 +154,7 @@ describe("Literals", () => {
     });
 
     describe("Template Literal (``)", () => {
-      test("Type Infrence", () => {
+      test("Type Inference", () => {
         assertType<Equal<DSLInfer<"``">, ``>>();
         assertType<Equal<DSLInfer<"`a`">, "a">>();
       });
@@ -172,7 +172,7 @@ describe("Literals", () => {
 
 describe("Literal String with pipe - '|' \"|\" `|` [EDGE CASE]", () => {
   describe("Single Quote ('|')", () => {
-    test("Type Infrence", () => {
+    test("Type Inference", () => {
       assertType<Equal<DSLInfer<"'|'">, "|">>();
     });
     test("Runtime Validation", () => {
@@ -184,7 +184,7 @@ describe("Literal String with pipe - '|' \"|\" `|` [EDGE CASE]", () => {
   });
 
   describe('Double Quote ("|")', () => {
-    test("Type Infrence", () => {
+    test("Type Inference", () => {
       assertType<Equal<DSLInfer<'"|"'>, "|">>();
     });
     test("Runtime Validation", () => {
@@ -196,7 +196,7 @@ describe("Literal String with pipe - '|' \"|\" `|` [EDGE CASE]", () => {
   });
 
   describe("Template Literal (`|`)", () => {
-    test("Type Infrence", () => {
+    test("Type Inference", () => {
       assertType<Equal<DSLInfer<"`|`">, `|`>>();
     });
     test("Runtime Validation", () => {
@@ -210,7 +210,7 @@ describe("Literal String with pipe - '|' \"|\" `|` [EDGE CASE]", () => {
 
 describe("Union Type (|)", () => {
   describe("Union Type with Primitives - string | number | bigint | boolean | undefined", () => {
-    test("Type Infrence", () => {
+    test("Type Inference", () => {
       assertType<
         Equal<
           DSLInfer<"string | number | bigint | boolean | undefined">,
@@ -266,7 +266,7 @@ describe("Union Type (|)", () => {
 
   describe("Union Type with Literal Value", () => {
     describe("Boolean Literal", () => {
-      test("Type Infrence", () => {
+      test("Type Inference", () => {
         assertType<Equal<DSLInfer<"true | false">, true | false>>();
       });
       test("Runtime Validation", () => {
@@ -279,7 +279,7 @@ describe("Union Type (|)", () => {
     });
 
     describe("Number Literal", () => {
-      test("Type Infrence", () => {
+      test("Type Inference", () => {
         assertType<Equal<DSLInfer<"0 | 1">, 0 | 1>>();
       });
       test("Runtime Validation", () => {
@@ -292,7 +292,7 @@ describe("Union Type (|)", () => {
     });
 
     describe("String Literal", () => {
-      test("Type Infrence", () => {
+      test("Type Inference", () => {
         assertType<Equal<DSLInfer<"'foo' | 'bar'">, "foo" | "bar">>();
       });
       test("Runtime Validation", () => {
@@ -306,7 +306,7 @@ describe("Union Type (|)", () => {
   });
 
   describe("Complex union - true | 0 | 'a' | `b` | undefined | \"c\"", () => {
-    test("Type Infrence", () => {
+    test("Type Inference", () => {
       assertType<
         Equal<
           DSLInfer<"true | 0 | 'a' | `b` | undefined | \"c\"">,
@@ -351,7 +351,7 @@ describe("Union Type (|)", () => {
 
 describe("Template literal with pipe - `${ }`", () => {
   describe("Primitive types", () => {
-    test("Type Infrence", () => {
+    test("Type Inference", () => {
       assertType<
         Equal<
           DSLInfer<"`${string | number | bigint | boolean | undefined}`">,
@@ -402,7 +402,7 @@ describe("Template literal with pipe - `${ }`", () => {
   });
 
   describe(`Literals - true, 0, "foo", 'bar'`, () => {
-    test("Type Infrence", () => {
+    test("Type Inference", () => {
       assertType<
         Equal<
           DSLInfer<"`${true | 0 | \"foo\" | 'bar'}`">,
@@ -434,7 +434,7 @@ describe("Template literal with pipe - `${ }`", () => {
   });
 
   describe("Complex Multi `before${'a' | 'b'}mid${1 | 2}end`", () => {
-    test("Type Infrence", () => {
+    test("Type Inference", () => {
       assertType<
         Equal<
           DSLInfer<'`before${"a" | "b"}mid${1 | 2}end`'>,
@@ -475,51 +475,6 @@ describe("Template literal with pipe - `${ }`", () => {
         "beforebmid2end",
       );
     });
-  });
-});
-
-describe("Union types", () => {
-  test("returns the value when it matches any member", () => {
-    assert.strictEqual(parseValueAgainstDSL("string | number", "hi"), "hi");
-    assert.strictEqual(parseValueAgainstDSL("string | number", 5), 5);
-    dslString("string | number");
-    assertType<Equal<DSLInfer<"string | number">, string | number>>();
-  });
-
-  test("throws when the value matches no member", () => {
-    // @ts-expect-error
-    assert.throws(() => parseValueAgainstDSL("string | number", true));
-  });
-
-  test("with undefined", () => {
-    assert.strictEqual(
-      parseValueAgainstDSL("string | undefined", undefined),
-      undefined,
-    );
-    assert.strictEqual(parseValueAgainstDSL("string | undefined", "x"), "x");
-    // @ts-expect-error
-    assert.throws(() => parseValueAgainstDSL("string | undefined", 0));
-    dslString("string | undefined");
-    assertType<Equal<DSLInfer<"string | undefined">, string | undefined>>();
-  });
-
-  test("three-member union", () => {
-    assert.strictEqual(
-      parseValueAgainstDSL("string | number | boolean", false),
-      false,
-    );
-    dslString("string | undefined | boolean");
-    assertType<
-      Equal<DSLInfer<"string | number | boolean">, string | number | boolean>
-    >();
-  });
-
-  test("whitespace-sensitive parsing", () => {
-    assert.strictEqual(parseValueAgainstDSL("string | number", 5), 5);
-    // @ts-expect-error
-    dslString("    string | undefined    ");
-    // @ts-expect-error
-    assert.strictEqual(parseValueAgainstDSL("  string  |  number  ", 5), 5);
   });
 });
 
