@@ -1,3 +1,4 @@
+import type { DSLInfer } from "@/dsl/index.ts";
 import type { BaseCSSSyntaxConfig } from "./syntax-config/index.ts";
 
 export type BaseCSSProperty<
@@ -6,7 +7,7 @@ export type BaseCSSProperty<
 > = {
   syntax: Syntax;
   inherits: boolean;
-  "initial-value": SyntaxKeysConfig[Syntax];
+  "initial-value": DSLInfer<SyntaxKeysConfig[Syntax] & string>;
 };
 
 export type ValidCSSProperty<S extends BaseCSSSyntaxConfig> = {
