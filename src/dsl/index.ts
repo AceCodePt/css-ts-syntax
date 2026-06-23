@@ -1,10 +1,5 @@
 import type { Trim } from "@/types.ts";
 
-// [x] - Support union in template literals of primitives
-// [x] - Support union in template literals of literals
-// [x] - Support placing pipe | inside of quotes '|' / "'"
-// [x] - Add a test: for `'"|"'`, `"'|'"` and "`|`"
-// [ ] - Add a test for multiple ${ } in string template
 // [ ] - Discuss: When should the code throw on invalid DSLString
 // [ ] - Prevent meaningless end pipe "string |"
 // [ ] - Prevent misuse of spaces "string|number" or "   string   "
@@ -52,18 +47,26 @@ type ValidateRestOfBackTick<
   : `${Str}`;
 
 type SingleDSLValidate<
-  S extends Record<string, any>,
+  Keywords extends Record<string, any>,
   L extends string,
   R extends string,
 > =
   Trim<L> extends `${infer N extends number}`
-    ? PipeWhenExists<S, N, R>
+    ? PipeWhenExists<Keywords, N, R>
     : Trim<L> extends `\`${infer Str extends string}\``
-      ? PipeWhenExists<S, `\`${ValidateRestOfBackTick<S, Str>}\``, R>
+      ? PipeWhenExists<
+          Keywords,
+          `\`${ValidateRestOfBackTick<Keywords, Str>}\``,
+          R
+        >
       : Trim<L> extends `'${string}'` | `"${string}"`
-        ? PipeWhenExists<S, L, R>
-        : [Extract<keyof S, `${Trim<L>}${string}`>] extends [string]
-          ? PipeWhenExists<S, Extract<keyof S, `${Trim<L>}${string}`>, R>
+        ? PipeWhenExists<Keywords, L, R>
+        : [Extract<keyof Keywords, `${Trim<L>}${string}`>] extends [string]
+          ? PipeWhenExists<
+              Keywords,
+              Extract<keyof Keywords, `${Trim<L>}${string}`>,
+              R
+            >
           : `'${Trim<L>}' is not supported`;
 
 type DSLStringDelimiter<
@@ -82,16 +85,20 @@ type DSLStringDelimiter<
       ? SingleDSLValidate<S, L, R>
       : SingleDSLValidate<S, T, never>;
 
-export type DSLValidate<S extends Record<string, any>, T extends string> =
-  Trim<T> extends `"${string}"${string}`
-    ? DSLStringDelimiter<S, T, '"'>
+export type DSLValidate<
+  Keywords extends Record<string, any>,
+  T extends DSLString,
+> = [T] extends [never]
+  ? string
+  : Trim<T> extends `"${string}"${string}`
+    ? DSLStringDelimiter<Keywords, T, '"'>
     : Trim<T> extends `'${string}'${string}`
-      ? DSLStringDelimiter<S, T, "'">
+      ? DSLStringDelimiter<Keywords, T, "'">
       : Trim<T> extends `\`${string}\`${string}`
-        ? DSLStringDelimiter<S, T, "`">
+        ? DSLStringDelimiter<Keywords, T, "`">
         : T extends `${infer L extends string}|${infer R extends string}`
-          ? SingleDSLValidate<S, L, R>
-          : SingleDSLValidate<S, T, never>;
+          ? SingleDSLValidate<Keywords, L, R>
+          : SingleDSLValidate<Keywords, T, never>;
 
 type InferRestOfBackTick<
   Keywords extends Record<string, any>,
