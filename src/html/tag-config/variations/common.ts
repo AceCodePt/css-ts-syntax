@@ -1,6 +1,7 @@
+import { SUPPORTED_KEYWORDS } from "@/dsl/index.ts";
 import { htmlTagConfig } from "../index.ts";
 
-export default htmlTagConfig({
+export default htmlTagConfig(SUPPORTED_KEYWORDS, {
   a: {
     attributes: {
       href: "string | undefined",
