@@ -1,78 +1,71 @@
-import type { PermissiveAttributeConfig } from "../config/attribute-config.ts";
-import type { PremissiveTagDefinition } from "../config/tag-config.ts";
-import type { PremissableComponentNode } from "../create-component.ts";
-
-export function renderComponent<
-  const TagConfig extends PremissiveTagDefinition,
-  const GlobalAttributeConfig extends PermissiveAttributeConfig,
-  const T extends keyof TagConfig & string,
-  const Component extends PremissableComponentNode<
-    TagConfig,
-    GlobalAttributeConfig,
-    T
+export function renderComponent(
+  _htmlTagAttributes: Record<
+    string,
+    { attributes?: Record<string, unknown>; innerHTML: unknown }
   >,
->(
-  htmlTagAttributes: TagConfig,
-  htmlGlobalAttributeConfig: GlobalAttributeConfig,
-  node: Component,
+  _htmlGlobalAttributeConfigOrNode: unknown,
+  _node?: unknown,
 ): string {
-  const record = node;
-  const tag = record.tag;
-  const innerHTML = record.innerHTML || [];
-  const attributes = record.attributes || {};
+  // let htmlGlobalAttributeConfig: Record<string, unknown>;
+  // let record: Record<string, unknown>;
 
-  // ==========================================
-  // 1. SERIALIZE ATTRIBUTES
-  // ==========================================
-  let attributesHtml = "";
-  const allPossibleAttributes = Object.keys(
-    Object.assign(
-      {},
-      htmlTagAttributes[tag]?.["attributes"],
-      htmlGlobalAttributeConfig,
-    ),
-  );
+  // if (node !== undefined) {
+  //   htmlGlobalAttributeConfig = htmlGlobalAttributeConfigOrNode as Record<
+  //     string,
+  //     unknown
+  //   >;
+  //   record = node as Record<string, unknown>;
+  // } else {
+  //   htmlGlobalAttributeConfig = {};
+  //   record = htmlGlobalAttributeConfigOrNode as Record<string, unknown>;
+  // }
 
-  for (const [key, value] of Object.entries(attributes)) {
-    if (!allPossibleAttributes.includes(key)) {
-      throw new Error(`Key ${key} wasn't found on ${tag}`);
-    }
+  // const tag = record.tag as string;
+  // const innerHTML = record.innerHTML || [];
+  // const attributes = record.attributes || {};
 
-    if (value === undefined || value === false) continue;
+  // // ==========================================
+  // // 1. SERIALIZE ATTRIBUTES
+  // // ==========================================
+  // let attributesHtml = "";
 
-    if (value === true) {
-      attributesHtml += ` ${key}`;
-      continue;
-    }
+  // for (const [key, value] of Object.entries(attributes)) {
+  //   if (value === undefined || value === false) continue;
 
-    attributesHtml += ` ${key}="${String(value)}"`;
-  }
+  //   if (value === true) {
+  //     attributesHtml += ` ${key}`;
+  //     continue;
+  //   }
 
-  const schemaForTag = htmlTagAttributes[tag];
-  const isVoidElement =
-    schemaForTag &&
-    Array.isArray(schemaForTag.innerHTML) &&
-    schemaForTag.innerHTML.length === 0;
+  //   attributesHtml += ` ${key}="${String(value)}"`;
+  // }
 
-  if (isVoidElement || !innerHTML) {
-    return `<${tag}${attributesHtml}>`; // No closing tag, purely schema-driven
-  }
+  // const schemaForTag = htmlTagAttributes[tag];
+  // const isVoidElement =
+  //   schemaForTag &&
+  //   Array.isArray(schemaForTag.innerHTML) &&
+  //   schemaForTag.innerHTML.length === 0;
 
-  let childrenHtml = "";
+  // if (isVoidElement || !innerHTML) {
+  //   return `<${tag}${attributesHtml}>`; // No closing tag, purely schema-driven
+  // }
 
-  for (const childDict of innerHTML) {
-    if (childDict && typeof childDict === "object") {
-      for (const childNode of Object.values(childDict)) {
-        childrenHtml += renderComponent(
-          htmlTagAttributes,
-          htmlGlobalAttributeConfig,
-          childNode,
-        );
-      }
-    } else {
-      childrenHtml += childDict.toString();
-    }
-  }
+  // let childrenHtml = "";
 
-  return `<${tag}${attributesHtml}>${childrenHtml}</${tag}>`;
+  // for (const childDict of innerHTML) {
+  //   if (childDict && typeof childDict === "object") {
+  //     for (const childNode of Object.values(childDict)) {
+  //       childrenHtml += renderComponent(
+  //         htmlTagAttributes,
+  //         htmlGlobalAttributeConfig,
+  //         childNode,
+  //       );
+  //     }
+  //   } else {
+  //     childrenHtml += childDict.toString();
+  //   }
+  // }
+
+  return "";
+  // return `<${tag}${attributesHtml}>${childrenHtml}</${tag}>`;
 }

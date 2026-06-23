@@ -4,207 +4,14 @@ and let the human what you are about to do and HALT
 */
 
 import { cssAttributeConfig } from "./css/css-attributes-config.ts";
-import { cssSyntaxConfig } from "./css/css-syntax-config.ts";
-import { htmlAttributeConfig } from "./html/html-attribute-config.ts";
-import { htmlTagConfig } from "./html/html-tag-config.ts";
+import { cssSyntaxConfig } from "./css/syntax-config/index.ts";
+import type { InferHTMLAttributeConfig } from "./html/attribute-config/types.ts";
+import commonHTMLAttributes from "./html/attribute-config/variations/common.ts";
+import commonHTMLTag from "./html/tag-config/variations/common.ts";
 
-export const HTML_GLOBAL_ATTRIBUTES = htmlAttributeConfig({
-  id: "string | undefined",
-  class: "string | undefined",
-  style: "string | undefined",
-  title: "string | undefined",
-  lang: "string | undefined",
-  dir: "'ltr' | 'rtl' | 'auto' | undefined",
-  hidden: "boolean | undefined",
-  tabindex: "number | undefined",
-  accesskey: "string | undefined",
-  autocapitalize:
-    "'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters' | undefined",
-  contenteditable: "'plaintext-only' | boolean | undefined",
-  draggable: "boolean | undefined",
-  spellcheck: "boolean | undefined",
-  role: "string | undefined",
-});
+export const HTML_GLOBAL_ATTRIBUTES = commonHTMLAttributes;
 
-export const HTML_TAG_DEFINITIONS = htmlTagConfig({
-  a: {
-    attributes: {
-      href: "string | undefined",
-      target: "'_self' | '_blank' | '_parent' | '_top' | undefined",
-      download: "string | boolean | undefined",
-      rel: "string | undefined",
-      hreflang: "string | undefined",
-    },
-    innerHTML: [
-      "#text",
-      "img",
-      "div",
-      "section",
-      "p",
-      "ul",
-      "h1",
-      "h2",
-      "h3",
-      "h4",
-      "h5",
-      "h6",
-    ],
-  },
-  article: {
-    innerHTML: "*",
-  },
-  button: {
-    attributes: {
-      type: "'submit' | 'reset' | 'button' | undefined",
-      disabled: "boolean | undefined",
-      name: "string | undefined",
-      value: "string | undefined",
-      form: "string | undefined",
-    },
-    innerHTML: ["#text", "span", "img"],
-  },
-  div: {
-    innerHTML: "*",
-  },
-  footer: {
-    innerHTML: "*",
-  },
-  form: {
-    attributes: {
-      action: "string",
-      method: "'get' | 'post' | 'dialog'",
-      enctype: "string | undefined",
-      novalidate: "boolean | undefined",
-      target: "'_self' | '_blank' | '_parent' | '_top' | undefined",
-    },
-    innerHTML: "*",
-  },
-  h1: {
-    innerHTML: ["#text", "span", "a"],
-  },
-  h2: {
-    innerHTML: ["#text", "span", "a"],
-  },
-  h3: {
-    innerHTML: ["#text", "span", "a"],
-  },
-  h4: {
-    innerHTML: ["#text", "span", "a"],
-  },
-  h5: {
-    innerHTML: ["#text", "span", "a"],
-  },
-  h6: {
-    innerHTML: ["#text", "span", "a"],
-  },
-  header: {
-    innerHTML: "*",
-  },
-  img: {
-    attributes: {
-      src: "string",
-      alt: "string",
-      width: "number | undefined",
-      height: "number | undefined",
-      loading: "'lazy' | 'eager' | undefined",
-      srcset: "string | undefined",
-      sizes: "string | undefined",
-    },
-    innerHTML: [],
-  },
-  input: {
-    attributes: {
-      type: "'text' | 'number' | 'password' | 'checkbox' | 'radio' | 'submit' | 'button' | 'email' | 'hidden'",
-      value: "string",
-      checked: "boolean | undefined",
-      name: "string | undefined",
-      placeholder: "string | undefined",
-      disabled: "boolean | undefined",
-      required: "boolean | undefined",
-      readonly: "boolean | undefined",
-      maxlength: "number | undefined",
-      minlength: "number | undefined",
-      max: "string | number | undefined",
-      min: "string | number | undefined",
-      step: "string | number | undefined",
-      pattern: "string | undefined",
-    },
-    innerHTML: [],
-  },
-  label: {
-    attributes: {
-      for: "string | undefined",
-      form: "string | undefined",
-    },
-    innerHTML: ["#text", "input", "span", "img"],
-  },
-  li: {
-    innerHTML: "*",
-  },
-  main: {
-    innerHTML: "*",
-  },
-  nav: {
-    innerHTML: "*",
-  },
-  ol: {
-    innerHTML: ["li"],
-  },
-  p: {
-    innerHTML: "*",
-  },
-  section: {
-    innerHTML: "*",
-  },
-  span: {
-    innerHTML: "*",
-  },
-  table: {
-    innerHTML: ["thead", "tbody", "tr"],
-  },
-  tbody: {
-    innerHTML: ["tr"],
-  },
-  td: {
-    attributes: {
-      colspan: "number | undefined",
-      rowspan: "number | undefined",
-      headers: "string | undefined",
-    },
-    innerHTML: "*",
-  },
-  textarea: {
-    attributes: {
-      name: "string | undefined",
-      value: "string",
-      placeholder: "string | undefined",
-      rows: "number | undefined",
-      cols: "number | undefined",
-      disabled: "boolean | undefined",
-      required: "boolean | undefined",
-      readonly: "boolean | undefined",
-      maxlength: "number | undefined",
-    },
-    innerHTML: ["#text"],
-  },
-  th: {
-    attributes: {
-      colspan: "number | undefined",
-      rowspan: "number | undefined",
-      headers: "string | undefined",
-    },
-    innerHTML: "*",
-  },
-  thead: {
-    innerHTML: ["tr"],
-  },
-  tr: {
-    innerHTML: ["th", "td"],
-  },
-  ul: {
-    innerHTML: ["li", "ol"],
-  },
-});
+export const HTML_TAG_DEFINITIONS = commonHTMLTag;
 
 export const CSS_SYNTAX = cssSyntaxConfig({
   // ── MDN numeric / dimension types ─────────────────────────────────────────
@@ -215,7 +22,7 @@ export const CSS_SYNTAX = cssSyntaxConfig({
   "<number>": "`${number}`",
 
   // https://developer.mozilla.org/en-US/docs/Web/CSS/percentage
-  "<percentage>": "`${number}${'%'}`",
+  "<percentage>": "`${number}%`",
 
   // https://developer.mozilla.org/en-US/docs/Web/CSS/length
   "<length>":
@@ -223,7 +30,7 @@ export const CSS_SYNTAX = cssSyntaxConfig({
 
   // https://developer.mozilla.org/en-US/docs/Web/CSS/length-percentage
   // Cross-reference — cannot be expressed in the DSL without token references
-  "<length-percentage>": "" as "<length>" | "<percentage>",
+  "<length-percentage>": "<length> | <percentage>",
 
   // https://developer.mozilla.org/en-US/docs/Web/CSS/angle
   "<angle>": "`${number}${'deg' | 'rad' | 'turn' | 'grad'}`",
@@ -250,10 +57,10 @@ export const CSS_SYNTAX = cssSyntaxConfig({
   // ── MDN color types ────────────────────────────────────────────────────────
   // https://developer.mozilla.org/en-US/docs/Web/CSS/color_value
   "<color>":
-    "`#${string}` | `rgb(${number} ${number} ${number})` | `rgb(${number} ${number} ${number} / ${number})` | `hsl(${number} ${number}${'%'} ${number}${'%'})` | `hsl(${number} ${number}${'%'} ${number}${'%'} / ${number})` | `oklch(${number} ${number} ${number})` | `oklch(${number} ${number} ${number} / ${number})` | `color(display-p3 ${number} ${number} ${number})` | 'transparent' | 'currentColor' | 'inherit'",
+    "`#${string}` | `rgb(${number} ${number} ${number})` | `rgb(${number} ${number} ${number} / ${number})` | `hsl(${number} ${number}% ${number}%)` | `hsl(${number} ${number}% ${number}% / ${number})` | `oklch(${number} ${number} ${number})` | `oklch(${number} ${number} ${number} / ${number})` | `color(display-p3 ${number} ${number} ${number})` | 'transparent' | 'currentColor' | 'inherit'",
 
   // https://developer.mozilla.org/en-US/docs/Web/CSS/alpha-value
-  "<alpha-value>": "`${number}` | `${number}${'%'}`",
+  "<alpha-value>": "`${number}` | `${number}%`",
 
   // ── MDN image type ─────────────────────────────────────────────────────────
   // https://developer.mozilla.org/en-US/docs/Web/CSS/image
@@ -292,12 +99,8 @@ export const CSS_SYNTAX = cssSyntaxConfig({
   // ── Grid-specific types (defined in CSS Grid spec, referenced by MDN) ──────
   // https://developer.mozilla.org/en-US/docs/Web/CSS/flex_value
   // Cross-reference — cannot be expressed in the DSL without token references
-  "<track-breadth>": "" as
-    | "<length-percentage>"
-    | "<flex>"
-    | "min-content"
-    | "max-content"
-    | "auto",
+  "<track-breadth>":
+    "<length-percentage> | <flex> | 'min-content' | 'max-content' | 'auto'",
 
   // ── font-weight numeric values (MDN lists 100–900 as valid <number> inputs) ─
   // https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight

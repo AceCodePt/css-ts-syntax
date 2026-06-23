@@ -1,43 +1,55 @@
 import test, { describe } from "node:test";
-import { dslString, parseValueAgainstDSL, type DSLInfer } from "@/dsl/index.ts";
+import {
+  dslString,
+  parseValueAgainstDSL,
+  SUPPORTED_KEYWORDS,
+  type DSLInfer,
+  type SupportedKeywords,
+} from "@/dsl/index.ts";
 import { assertType, type Equal } from "../type-utils.ts";
 import assert from "node:assert";
 
 describe("Primitive types", () => {
   describe("string", () => {
     test("Type Inference", () => {
-      assertType<Equal<DSLInfer<"string">, string>>();
+      assertType<Equal<DSLInfer<SupportedKeywords, "string">, string>>();
     });
     test("Runtime Validation", () => {
-      dslString("string");
+      dslString(SUPPORTED_KEYWORDS, "string");
     });
     test("Parse", () => {
-      assert.strictEqual(parseValueAgainstDSL("string", ""), "");
+      assert.strictEqual(
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "string", ""),
+        "",
+      );
     });
   });
 
   describe("number", () => {
     test("Type Inference", () => {
-      assertType<Equal<DSLInfer<"number">, number>>();
+      assertType<Equal<DSLInfer<SupportedKeywords, "number">, number>>();
     });
     test("Runtime Validation", () => {
-      dslString("number");
+      dslString(SUPPORTED_KEYWORDS, "number");
     });
     test("Parse", () => {
-      assert.strictEqual(parseValueAgainstDSL("number", 0), 0);
+      assert.strictEqual(
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "number", 0),
+        0,
+      );
     });
   });
 
   describe("bigint", () => {
     test("Type Inference", () => {
-      assertType<Equal<DSLInfer<"bigint">, bigint>>();
+      assertType<Equal<DSLInfer<SupportedKeywords, "bigint">, bigint>>();
     });
     test("Runtime Validation", () => {
-      dslString("bigint");
+      dslString(SUPPORTED_KEYWORDS, "bigint");
     });
     test("Parse", () => {
       assert.strictEqual(
-        parseValueAgainstDSL("bigint", BigInt("1")),
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "bigint", BigInt("1")),
         BigInt("1"),
       );
     });
@@ -45,36 +57,51 @@ describe("Primitive types", () => {
 
   describe("boolean", () => {
     test("Type Inference", () => {
-      assertType<Equal<DSLInfer<"boolean">, boolean>>();
+      assertType<Equal<DSLInfer<SupportedKeywords, "boolean">, boolean>>();
     });
     test("Runtime Validation", () => {
-      dslString("boolean");
+      dslString(SUPPORTED_KEYWORDS, "boolean");
     });
     test("Parse", () => {
-      assert.strictEqual(parseValueAgainstDSL("boolean", true), true);
-      assert.strictEqual(parseValueAgainstDSL("boolean", false), false);
+      assert.strictEqual(
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "boolean", true),
+        true,
+      );
+      assert.strictEqual(
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "boolean", false),
+        false,
+      );
     });
   });
 
   describe("undefined", () => {
     test("Type Inference", () => {
-      assertType<Equal<DSLInfer<"undefined">, undefined>>();
+      assertType<Equal<DSLInfer<SupportedKeywords, "undefined">, undefined>>();
     });
     test("Runtime Validation", () => {
-      dslString("undefined");
+      dslString(SUPPORTED_KEYWORDS, "undefined");
     });
     test("Parse", () => {
       assert.strictEqual(
-        parseValueAgainstDSL("undefined", undefined),
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "undefined", undefined),
         undefined,
       );
     });
   });
 
   test("returns the same reference for objects-free primitives", () => {
-    assert.strictEqual(parseValueAgainstDSL("string", "hello"), "hello");
-    assert.strictEqual(parseValueAgainstDSL("number", 42), 42);
-    assert.strictEqual(parseValueAgainstDSL("bigint", 7n), 7n);
+    assert.strictEqual(
+      parseValueAgainstDSL(SUPPORTED_KEYWORDS, "string", "hello"),
+      "hello",
+    );
+    assert.strictEqual(
+      parseValueAgainstDSL(SUPPORTED_KEYWORDS, "number", 42),
+      42,
+    );
+    assert.strictEqual(
+      parseValueAgainstDSL(SUPPORTED_KEYWORDS, "bigint", 7n),
+      7n,
+    );
   });
 });
 
@@ -82,25 +109,31 @@ describe("Literals", () => {
   describe("Literal Boolean", () => {
     describe("true", () => {
       test("Type Inference", () => {
-        assertType<Equal<DSLInfer<"true">, true>>();
+        assertType<Equal<DSLInfer<SupportedKeywords, "true">, true>>();
       });
       test("Runtime Validation", () => {
-        dslString("true");
+        dslString(SUPPORTED_KEYWORDS, "true");
       });
       test("Parse", () => {
-        assert.strictEqual(parseValueAgainstDSL("true", true), true);
+        assert.strictEqual(
+          parseValueAgainstDSL(SUPPORTED_KEYWORDS, "true", true),
+          true,
+        );
       });
     });
 
     describe("false", () => {
       test("Type Inference", () => {
-        assertType<Equal<DSLInfer<"false">, false>>();
+        assertType<Equal<DSLInfer<SupportedKeywords, "false">, false>>();
       });
       test("Runtime Validation", () => {
-        dslString("false");
+        dslString(SUPPORTED_KEYWORDS, "false");
       });
       test("Parse", () => {
-        assert.strictEqual(parseValueAgainstDSL("false", false), false);
+        assert.strictEqual(
+          parseValueAgainstDSL(SUPPORTED_KEYWORDS, "false", false),
+          false,
+        );
       });
     });
   });
@@ -108,16 +141,16 @@ describe("Literals", () => {
   describe("Literal Number", () => {
     describe("0, 1", () => {
       test("Type Inference", () => {
-        assertType<Equal<DSLInfer<"0">, 0>>();
-        assertType<Equal<DSLInfer<"1">, 1>>();
+        assertType<Equal<DSLInfer<SupportedKeywords, "0">, 0>>();
+        assertType<Equal<DSLInfer<SupportedKeywords, "1">, 1>>();
       });
       test("Runtime Validation", () => {
-        dslString("0");
-        dslString("1");
+        dslString(SUPPORTED_KEYWORDS, "0");
+        dslString(SUPPORTED_KEYWORDS, "1");
       });
       test("Parse", () => {
-        assert.strictEqual(parseValueAgainstDSL("0", 0), 0);
-        assert.strictEqual(parseValueAgainstDSL("1", 1), 1);
+        assert.strictEqual(parseValueAgainstDSL(SUPPORTED_KEYWORDS, "0", 0), 0);
+        assert.strictEqual(parseValueAgainstDSL(SUPPORTED_KEYWORDS, "1", 1), 1);
       });
     });
   });
@@ -125,46 +158,64 @@ describe("Literals", () => {
   describe("Literal Strings", () => {
     describe("Single Quote ('')", () => {
       test("Type Inference", () => {
-        assertType<Equal<DSLInfer<"''">, "">>();
-        assertType<Equal<DSLInfer<"'a'">, "a">>();
+        assertType<Equal<DSLInfer<SupportedKeywords, "''">, "">>();
+        assertType<Equal<DSLInfer<SupportedKeywords, "'a'">, "a">>();
       });
       test("Runtime Validation", () => {
-        dslString("''");
-        dslString("'a'");
+        dslString(SUPPORTED_KEYWORDS, "''");
+        dslString(SUPPORTED_KEYWORDS, "'a'");
       });
       test("Parse", () => {
-        assert.strictEqual(parseValueAgainstDSL("''", ""), "");
-        assert.strictEqual(parseValueAgainstDSL("'a'", "a"), "a");
+        assert.strictEqual(
+          parseValueAgainstDSL(SUPPORTED_KEYWORDS, "''", ""),
+          "",
+        );
+        assert.strictEqual(
+          parseValueAgainstDSL(SUPPORTED_KEYWORDS, "'a'", "a"),
+          "a",
+        );
       });
     });
 
     describe('Double Quote ("")', () => {
       test("Type Inference", () => {
-        assertType<Equal<DSLInfer<'""'>, "">>();
-        assertType<Equal<DSLInfer<'"a"'>, "a">>();
+        assertType<Equal<DSLInfer<SupportedKeywords, '""'>, "">>();
+        assertType<Equal<DSLInfer<SupportedKeywords, '"a"'>, "a">>();
       });
       test("Runtime Validation", () => {
-        dslString('""');
-        dslString('"a"');
+        dslString(SUPPORTED_KEYWORDS, '""');
+        dslString(SUPPORTED_KEYWORDS, '"a"');
       });
       test("Parse", () => {
-        assert.strictEqual(parseValueAgainstDSL('""', ""), "");
-        assert.strictEqual(parseValueAgainstDSL('"a"', "a"), "a");
+        assert.strictEqual(
+          parseValueAgainstDSL(SUPPORTED_KEYWORDS, '""', ""),
+          "",
+        );
+        assert.strictEqual(
+          parseValueAgainstDSL(SUPPORTED_KEYWORDS, '"a"', "a"),
+          "a",
+        );
       });
     });
 
     describe("Template Literal (``)", () => {
       test("Type Inference", () => {
-        assertType<Equal<DSLInfer<"``">, ``>>();
-        assertType<Equal<DSLInfer<"`a`">, "a">>();
+        assertType<Equal<DSLInfer<SupportedKeywords, "``">, ``>>();
+        assertType<Equal<DSLInfer<SupportedKeywords, "`a`">, "a">>();
       });
       test("Runtime Validation", () => {
-        dslString("``");
-        dslString("`a`");
+        dslString(SUPPORTED_KEYWORDS, "``");
+        dslString(SUPPORTED_KEYWORDS, "`a`");
       });
       test("Parse", () => {
-        assert.strictEqual(parseValueAgainstDSL("``", ``), ``);
-        assert.strictEqual(parseValueAgainstDSL("`a`", "a"), "a");
+        assert.strictEqual(
+          parseValueAgainstDSL(SUPPORTED_KEYWORDS, "``", ``),
+          ``,
+        );
+        assert.strictEqual(
+          parseValueAgainstDSL(SUPPORTED_KEYWORDS, "`a`", "a"),
+          "a",
+        );
       });
     });
   });
@@ -173,37 +224,46 @@ describe("Literals", () => {
 describe("Literal String with pipe - '|' \"|\" `|` [EDGE CASE]", () => {
   describe("Single Quote ('|')", () => {
     test("Type Inference", () => {
-      assertType<Equal<DSLInfer<"'|'">, "|">>();
+      assertType<Equal<DSLInfer<SupportedKeywords, "'|'">, "|">>();
     });
     test("Runtime Validation", () => {
-      dslString("'|'");
+      dslString(SUPPORTED_KEYWORDS, "'|'");
     });
     test("Parse", () => {
-      assert.strictEqual(parseValueAgainstDSL("'|'", "|"), "|");
+      assert.strictEqual(
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "'|'", "|"),
+        "|",
+      );
     });
   });
 
   describe('Double Quote ("|")', () => {
     test("Type Inference", () => {
-      assertType<Equal<DSLInfer<'"|"'>, "|">>();
+      assertType<Equal<DSLInfer<SupportedKeywords, '"|"'>, "|">>();
     });
     test("Runtime Validation", () => {
-      dslString('"|"');
+      dslString(SUPPORTED_KEYWORDS, '"|"');
     });
     test("Parse", () => {
-      assert.strictEqual(parseValueAgainstDSL('"|"', "|"), "|");
+      assert.strictEqual(
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, '"|"', "|"),
+        "|",
+      );
     });
   });
 
   describe("Template Literal (`|`)", () => {
     test("Type Inference", () => {
-      assertType<Equal<DSLInfer<"`|`">, `|`>>();
+      assertType<Equal<DSLInfer<SupportedKeywords, "`|`">, `|`>>();
     });
     test("Runtime Validation", () => {
-      dslString("`|`");
+      dslString(SUPPORTED_KEYWORDS, "`|`");
     });
     test("Parse", () => {
-      assert.strictEqual(parseValueAgainstDSL("`|`", `|`), `|`);
+      assert.strictEqual(
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "`|`", `|`),
+        `|`,
+      );
     });
   });
 });
@@ -213,17 +273,24 @@ describe("Union Type (|)", () => {
     test("Type Inference", () => {
       assertType<
         Equal<
-          DSLInfer<"string | number | bigint | boolean | undefined">,
+          DSLInfer<
+            SupportedKeywords,
+            "string | number | bigint | boolean | undefined"
+          >,
           string | number | bigint | boolean | undefined
         >
       >();
     });
     test("Runtime Validation", () => {
-      dslString("string | number | bigint | boolean | undefined");
+      dslString(
+        SUPPORTED_KEYWORDS,
+        "string | number | bigint | boolean | undefined",
+      );
     });
     test("Parse", () => {
       assert.strictEqual(
         parseValueAgainstDSL(
+          SUPPORTED_KEYWORDS,
           "string | number | bigint | boolean | undefined",
           "",
         ),
@@ -232,6 +299,7 @@ describe("Union Type (|)", () => {
 
       assert.strictEqual(
         parseValueAgainstDSL(
+          SUPPORTED_KEYWORDS,
           "string | number | bigint | boolean | undefined",
           0,
         ),
@@ -240,6 +308,7 @@ describe("Union Type (|)", () => {
 
       assert.strictEqual(
         parseValueAgainstDSL(
+          SUPPORTED_KEYWORDS,
           "string | number | bigint | boolean | undefined",
           BigInt("0"),
         ),
@@ -248,6 +317,7 @@ describe("Union Type (|)", () => {
 
       assert.strictEqual(
         parseValueAgainstDSL(
+          SUPPORTED_KEYWORDS,
           "string | number | bigint | boolean | undefined",
           true,
         ),
@@ -256,6 +326,7 @@ describe("Union Type (|)", () => {
 
       assert.strictEqual(
         parseValueAgainstDSL(
+          SUPPORTED_KEYWORDS,
           "string | number | bigint | boolean | undefined",
           undefined,
         ),
@@ -267,40 +338,62 @@ describe("Union Type (|)", () => {
   describe("Union Type with Literal Value", () => {
     describe("Boolean Literal", () => {
       test("Type Inference", () => {
-        assertType<Equal<DSLInfer<"true | false">, true | false>>();
+        assertType<
+          Equal<DSLInfer<SupportedKeywords, "true | false">, true | false>
+        >();
       });
       test("Runtime Validation", () => {
-        dslString("true | false");
+        dslString(SUPPORTED_KEYWORDS, "true | false");
       });
       test("Parse", () => {
-        assert.strictEqual(parseValueAgainstDSL("true | false", true), true);
-        assert.strictEqual(parseValueAgainstDSL("true | false", false), false);
+        assert.strictEqual(
+          parseValueAgainstDSL(SUPPORTED_KEYWORDS, "true | false", true),
+          true,
+        );
+        assert.strictEqual(
+          parseValueAgainstDSL(SUPPORTED_KEYWORDS, "true | false", false),
+          false,
+        );
       });
     });
 
     describe("Number Literal", () => {
       test("Type Inference", () => {
-        assertType<Equal<DSLInfer<"0 | 1">, 0 | 1>>();
+        assertType<Equal<DSLInfer<SupportedKeywords, "0 | 1">, 0 | 1>>();
       });
       test("Runtime Validation", () => {
-        dslString("0 | 1");
+        dslString(SUPPORTED_KEYWORDS, "0 | 1");
       });
       test("Parse", () => {
-        assert.strictEqual(parseValueAgainstDSL("0 | 1", 0), 0);
-        assert.strictEqual(parseValueAgainstDSL("0 | 1", 1), 1);
+        assert.strictEqual(
+          parseValueAgainstDSL(SUPPORTED_KEYWORDS, "0 | 1", 0),
+          0,
+        );
+        assert.strictEqual(
+          parseValueAgainstDSL(SUPPORTED_KEYWORDS, "0 | 1", 1),
+          1,
+        );
       });
     });
 
     describe("String Literal", () => {
       test("Type Inference", () => {
-        assertType<Equal<DSLInfer<"'foo' | 'bar'">, "foo" | "bar">>();
+        assertType<
+          Equal<DSLInfer<SupportedKeywords, "'foo' | 'bar'">, "foo" | "bar">
+        >();
       });
       test("Runtime Validation", () => {
-        dslString("'foo' | 'bar'");
+        dslString(SUPPORTED_KEYWORDS, "'foo' | 'bar'");
       });
       test("Parse", () => {
-        assert.strictEqual(parseValueAgainstDSL("'foo' | 'bar'", "bar"), "bar");
-        assert.strictEqual(parseValueAgainstDSL("'foo' | 'bar'", "bar"), "bar");
+        assert.strictEqual(
+          parseValueAgainstDSL(SUPPORTED_KEYWORDS, "'foo' | 'bar'", "bar"),
+          "bar",
+        );
+        assert.strictEqual(
+          parseValueAgainstDSL(SUPPORTED_KEYWORDS, "'foo' | 'bar'", "bar"),
+          "bar",
+        );
       });
     });
   });
@@ -309,40 +402,64 @@ describe("Union Type (|)", () => {
     test("Type Inference", () => {
       assertType<
         Equal<
-          DSLInfer<"true | 0 | 'a' | `b` | undefined | \"c\"">,
+          DSLInfer<
+            SupportedKeywords,
+            "true | 0 | 'a' | `b` | undefined | \"c\""
+          >,
           true | 0 | "a" | `b` | undefined | "c"
         >
       >();
     });
     test("Runtime Validation", () => {
-      dslString("true | 0 | 'a' | `b` | undefined | \"c\"");
+      dslString(SUPPORTED_KEYWORDS, "true | 0 | 'a' | `b` | undefined | \"c\"");
     });
     test("Parse", () => {
       assert.strictEqual(
-        parseValueAgainstDSL("true | 0 | 'a' | `b` | undefined | \"c\"", true),
+        parseValueAgainstDSL(
+          SUPPORTED_KEYWORDS,
+          "true | 0 | 'a' | `b` | undefined | \"c\"",
+          true,
+        ),
         true,
       );
       assert.strictEqual(
-        parseValueAgainstDSL("true | 0 | 'a' | `b` | undefined | \"c\"", 0),
+        parseValueAgainstDSL(
+          SUPPORTED_KEYWORDS,
+          "true | 0 | 'a' | `b` | undefined | \"c\"",
+          0,
+        ),
         0,
       );
       assert.strictEqual(
-        parseValueAgainstDSL("true | 0 | 'a' | `b` | undefined | \"c\"", "a"),
+        parseValueAgainstDSL(
+          SUPPORTED_KEYWORDS,
+          "true | 0 | 'a' | `b` | undefined | \"c\"",
+          "a",
+        ),
         "a",
       );
       assert.strictEqual(
-        parseValueAgainstDSL("true | 0 | 'a' | `b` | undefined | \"c\"", "b"),
+        parseValueAgainstDSL(
+          SUPPORTED_KEYWORDS,
+          "true | 0 | 'a' | `b` | undefined | \"c\"",
+          "b",
+        ),
         "b",
       );
       assert.strictEqual(
         parseValueAgainstDSL(
+          SUPPORTED_KEYWORDS,
           "true | 0 | 'a' | `b` | undefined | \"c\"",
           undefined,
         ),
         undefined,
       );
       assert.strictEqual(
-        parseValueAgainstDSL("true | 0 | 'a' | `b` | undefined | \"c\"", "c"),
+        parseValueAgainstDSL(
+          SUPPORTED_KEYWORDS,
+          "true | 0 | 'a' | `b` | undefined | \"c\"",
+          "c",
+        ),
         "c",
       );
     });
@@ -354,17 +471,24 @@ describe("Template literal with pipe - `${ }`", () => {
     test("Type Inference", () => {
       assertType<
         Equal<
-          DSLInfer<"`${string | number | bigint | boolean | undefined}`">,
+          DSLInfer<
+            SupportedKeywords,
+            "`${string | number | bigint | boolean | undefined}`"
+          >,
           `${string | number | bigint | boolean | undefined}`
         >
       >();
     });
     test("Runtime Validation", () => {
-      dslString("`${string | number | bigint | boolean | undefined}`");
+      dslString(
+        SUPPORTED_KEYWORDS,
+        "`${string | number | bigint | boolean | undefined}`",
+      );
     });
     test("Parse", () => {
       assert.strictEqual(
         parseValueAgainstDSL(
+          SUPPORTED_KEYWORDS,
           "`${string | number | bigint | boolean | undefined}`",
           "",
         ),
@@ -372,6 +496,7 @@ describe("Template literal with pipe - `${ }`", () => {
       );
       assert.strictEqual(
         parseValueAgainstDSL(
+          SUPPORTED_KEYWORDS,
           "`${string | number | bigint | boolean | undefined}`",
           "1.1",
         ),
@@ -379,6 +504,7 @@ describe("Template literal with pipe - `${ }`", () => {
       );
       assert.strictEqual(
         parseValueAgainstDSL(
+          SUPPORTED_KEYWORDS,
           "`${string | number | bigint | boolean | undefined}`",
           "1",
         ),
@@ -386,6 +512,7 @@ describe("Template literal with pipe - `${ }`", () => {
       );
       assert.strictEqual(
         parseValueAgainstDSL(
+          SUPPORTED_KEYWORDS,
           "`${string | number | bigint | boolean | undefined}`",
           "true",
         ),
@@ -393,6 +520,7 @@ describe("Template literal with pipe - `${ }`", () => {
       );
       assert.strictEqual(
         parseValueAgainstDSL(
+          SUPPORTED_KEYWORDS,
           "`${string | number | bigint | boolean | undefined}`",
           "undefined",
         ),
@@ -405,29 +533,45 @@ describe("Template literal with pipe - `${ }`", () => {
     test("Type Inference", () => {
       assertType<
         Equal<
-          DSLInfer<"`${true | 0 | \"foo\" | 'bar'}`">,
+          DSLInfer<SupportedKeywords, "`${true | 0 | \"foo\" | 'bar'}`">,
           `${true | 0 | "foo" | "bar"}`
         >
       >();
     });
     test("Runtime Validation", () => {
-      dslString("`${true | 0 | \"foo\" | 'bar'}`");
+      dslString(SUPPORTED_KEYWORDS, "`${true | 0 | \"foo\" | 'bar'}`");
     });
     test("Parse", () => {
       assert.strictEqual(
-        parseValueAgainstDSL("`${true | 0 | \"foo\" | 'bar'}`", "true"),
+        parseValueAgainstDSL(
+          SUPPORTED_KEYWORDS,
+          "`${true | 0 | \"foo\" | 'bar'}`",
+          "true",
+        ),
         "true",
       );
       assert.strictEqual(
-        parseValueAgainstDSL("`${true | 0 | \"foo\" | 'bar'}`", "0"),
+        parseValueAgainstDSL(
+          SUPPORTED_KEYWORDS,
+          "`${true | 0 | \"foo\" | 'bar'}`",
+          "0",
+        ),
         "0",
       );
       assert.strictEqual(
-        parseValueAgainstDSL("`${true | 0 | \"foo\" | 'bar'}`", "foo"),
+        parseValueAgainstDSL(
+          SUPPORTED_KEYWORDS,
+          "`${true | 0 | \"foo\" | 'bar'}`",
+          "foo",
+        ),
         "foo",
       );
       assert.strictEqual(
-        parseValueAgainstDSL("`${true | 0 | \"foo\" | 'bar'}`", "bar"),
+        parseValueAgainstDSL(
+          SUPPORTED_KEYWORDS,
+          "`${true | 0 | \"foo\" | 'bar'}`",
+          "bar",
+        ),
         "bar",
       );
     });
@@ -437,17 +581,18 @@ describe("Template literal with pipe - `${ }`", () => {
     test("Type Inference", () => {
       assertType<
         Equal<
-          DSLInfer<'`before${"a" | "b"}mid${1 | 2}end`'>,
+          DSLInfer<SupportedKeywords, '`before${"a" | "b"}mid${1 | 2}end`'>,
           `before${"a" | "b"}mid${1 | 2}end`
         >
       >();
     });
     test("Runtime Validation", () => {
-      dslString('`before${"a" | "b"}mid${1 | 2}end`');
+      dslString(SUPPORTED_KEYWORDS, '`before${"a" | "b"}mid${1 | 2}end`');
     });
     test("Parse", () => {
       assert.strictEqual(
         parseValueAgainstDSL(
+          SUPPORTED_KEYWORDS,
           '`before${"a" | "b"}mid${1 | 2}end`',
           "beforeamid1end",
         ),
@@ -455,6 +600,7 @@ describe("Template literal with pipe - `${ }`", () => {
       );
       assert.strictEqual(
         parseValueAgainstDSL(
+          SUPPORTED_KEYWORDS,
           '`before${"a" | "b"}mid${1 | 2}end`',
           "beforebmid1end",
         ),
@@ -462,6 +608,7 @@ describe("Template literal with pipe - `${ }`", () => {
       );
       assert.strictEqual(
         parseValueAgainstDSL(
+          SUPPORTED_KEYWORDS,
           '`before${"a" | "b"}mid${1 | 2}end`',
           "beforeamid2end",
         ),
@@ -469,6 +616,7 @@ describe("Template literal with pipe - `${ }`", () => {
       );
       assert.strictEqual(
         parseValueAgainstDSL(
+          SUPPORTED_KEYWORDS,
           '`before${"a" | "b"}mid${1 | 2}end`',
           "beforebmid2end",
         ),
@@ -481,54 +629,74 @@ describe("Template literal with pipe - `${ }`", () => {
 describe("Error handling", () => {
   describe("type mismatches", () => {
     test("'string' throws for non-strings", () => {
-      // @ts-expect-error
-      assert.throws(() => parseValueAgainstDSL("string", 0));
-      // @ts-expect-error
-      assert.throws(() => parseValueAgainstDSL("string", true));
-      // @ts-expect-error
-      assert.throws(() => parseValueAgainstDSL("string", undefined));
+      assert.throws(() =>
+        // @ts-expect-error
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "string", 0),
+      );
+      assert.throws(() =>
+        // @ts-expect-error
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "string", true),
+      );
+      assert.throws(() =>
+        // @ts-expect-error
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "string", undefined),
+      );
     });
 
     test("'number' throws for non-numbers", () => {
-      // @ts-expect-error
-      assert.throws(() => parseValueAgainstDSL("number", "0"));
-      // @ts-expect-error
-      assert.throws(() => parseValueAgainstDSL("number", BigInt("0")));
+      assert.throws(() =>
+        // @ts-expect-error
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "number", "0"),
+      );
+      assert.throws(() =>
+        // @ts-expect-error
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "number", BigInt("0")),
+      );
     });
 
     test("'undefined' throws for null", () => {
-      // @ts-expect-error
-      assert.throws(() => parseValueAgainstDSL("undefined", null));
+      assert.throws(() =>
+        // @ts-expect-error
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "undefined", null),
+      );
     });
 
     test("'boolean' throws for truthy/falsy non-booleans", () => {
-      // @ts-expect-error
-      assert.throws(() => parseValueAgainstDSL("boolean", 1));
-      // @ts-expect-error
-      assert.throws(() => parseValueAgainstDSL("boolean", ""));
+      assert.throws(() =>
+        // @ts-expect-error
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "boolean", 1),
+      );
+      assert.throws(() =>
+        // @ts-expect-error
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "boolean", ""),
+      );
     });
   });
 
   describe("malformed DSL", () => {
     test("unknown primitive throws", () => {
       // @ts-expect-error
-      dslString("xyz");
-      // @ts-expect-error
-      assert.throws(() => parseValueAgainstDSL("xyz", "hi"));
+      dslString(SUPPORTED_KEYWORDS, "xyz");
+      assert.throws(() =>
+        // @ts-expect-error
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "xyz", "hi"),
+      );
     });
 
     test("partially-valid union throws", () => {
       // @ts-expect-error
-      dslString("string | xyz");
-      // @ts-expect-error
-      assert.throws(() => parseValueAgainstDSL("string | xyz", "hi"));
+      dslString(SUPPORTED_KEYWORDS, "string | xyz");
+      assert.throws(() =>
+        // @ts-expect-error
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "string | xyz", "hi"),
+      );
     });
 
     test("empty string throws", () => {
       // @ts-expect-error
-      dslString("");
+      dslString(SUPPORTED_KEYWORDS, "");
       // @ts-expect-error
-      assert.throws(() => parseValueAgainstDSL("", "hi"));
+      assert.throws(() => parseValueAgainstDSL(SUPPORTED_KEYWORDS, "", "hi"));
     });
   });
 
@@ -536,7 +704,7 @@ describe("Error handling", () => {
     test("malformed DSL error mentions the DSL string", () => {
       assert.throws(
         // @ts-expect-error
-        () => parseValueAgainstDSL("xyz", "hi"),
+        () => parseValueAgainstDSL(SUPPORTED_KEYWORDS, "xyz", "hi"),
         /Invalid DSL string/,
       );
     });
@@ -544,7 +712,7 @@ describe("Error handling", () => {
     test("value mismatch error mentions the mismatch", () => {
       assert.throws(
         // @ts-expect-error
-        () => parseValueAgainstDSL("string", 5),
+        () => parseValueAgainstDSL(SUPPORTED_KEYWORDS, "string", 5),
         /does not match DSL/,
       );
     });

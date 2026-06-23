@@ -17,6 +17,7 @@ export type BaseHTMLTagConfig<Tags extends string = string> = Record<
 >;
 
 export type ValidateHTMLTagConfig<
+  Keywords extends Record<string, any>,
   TagDefinition extends BaseHTMLTagConfig = BaseHTMLTagConfig,
 > = {
   [Tag in keyof TagDefinition]: Tag extends string
@@ -25,6 +26,7 @@ export type ValidateHTMLTagConfig<
         [K in keyof TagDefinition[Tag]]: K extends keyof BaseHTMLTagConfig[keyof BaseHTMLTagConfig]
           ? K extends "attributes"
             ? ValidateHTMLAttributeConfig<
+                Keywords,
                 Exclude<TagDefinition[Tag]["attributes"], undefined>
               >
             : TagDefinition[Tag][K]

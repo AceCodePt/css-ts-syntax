@@ -1,25 +1,24 @@
 import { test, describe } from "node:test";
 import assert from "node:assert";
 import { renderComponent } from "../src/render/render-component.ts";
-import { tagDefinition } from "../src/config/tag-config.ts";
-import { attributeConfig } from "../src/config/attribute-config.ts";
+import { htmlTagConfig } from "../src/html/tag-config/index.ts";
+import { htmlAttributeConfig } from "../src/html/attribute-config/html-attribute-config.ts";
 import { createComponent } from "../src/create-component.ts";
 
 // ==========================================
 // 1. SETUP MINIMAL MOCK SCHEMA CONFIGS
 // ==========================================
-const MOCK_SHARED_ATTRIBUTES = attributeConfig({
-  id: "" as string,
-  class: "" as string,
+const MOCK_SHARED_ATTRIBUTES = htmlAttributeConfig({
+  id: "string",
+  class: "string",
 });
 
-const MOCK_TAG_ATTRIBUTES = tagDefinition({
+const MOCK_TAG_ATTRIBUTES = htmlTagConfig({
   div: { innerHTML: "*" },
   p: { innerHTML: ["#text"] },
   img: {
+    attributes: { src: "string", alt: "string" },
     innerHTML: [],
-    src: "" as string, // 👈 Widened
-    alt: "" as string, // 👈 Widened
   },
   ul: { innerHTML: ["li"] },
   li: { innerHTML: ["#text"] },
@@ -55,12 +54,14 @@ describe("Component Renderer", () => {
   });
 
   test("should handle boolean attributes correctly (handling true, false, and undefined)", () => {
-    const localTags = tagDefinition({
+    const localTags = htmlTagConfig({
       button: {
+        attributes: {
+          disabled: "boolean",
+          autofocus: "boolean",
+          ariaLive: "string | undefined",
+        },
         innerHTML: ["#text"],
-        disabled: false as boolean, // 👈 Widened to accept any boolean
-        autofocus: false as boolean, // 👈 Widened to accept any boolean
-        ariaLive: "" as string | undefined, // 👈 Explicitly optional in schema
       },
     });
 

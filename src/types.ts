@@ -27,11 +27,12 @@ export type ErrorMessage<M extends string> = `${M}`;
 
 export type IllegalChars = "(" | ")" | "[" | "]" | "{" | "}";
 
-export type IllegalChar<S extends string> = S extends `${infer Head}${infer Tail}`
-  ? Head extends IllegalChars
-    ? Head
-    : IllegalChar<Tail>
-  : never;
+export type IllegalChar<S extends string> =
+  S extends `${infer Head}${infer Tail}`
+    ? Head extends IllegalChars
+      ? Head
+      : IllegalChar<Tail>
+    : never;
 
 export type SplitPipe<S extends string> = S extends `${infer A}|${infer B}`
   ? Trim<A> | SplitPipe<B>

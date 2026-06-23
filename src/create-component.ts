@@ -1,90 +1,112 @@
-import type { BaseHTMLAttributeConfig } from "./html/html-attribute-config.ts";
-import type { BaseHTMLTagConfig } from "./html/html-tag-config.ts";
-import type {
-  Keyof,
-  MakeUndefinedOptional,
-  Simplify,
-  WidenObject,
-} from "./types.ts";
+import type { DSLInfer } from "@/dsl/index.ts";
+import type { BaseHTMLAttributeConfig } from "@/html/attribute-config/types.ts";
+import type { BaseHTMLTagConfig } from "@/html/tag-config/types.ts";
+import type { Keyof, MakeUndefinedOptional } from "@/types.ts";
 
-type PermissiveSementicName = string;
+type ExtractTagAttributes<TagDef> = TagDef extends { attributes?: infer A }
+  ? A extends BaseHTMLAttributeConfig
+    ? A
+    : {}
+  : {};
 
-export type AnyComponentNode<
-  TagConfig extends BaseHTMLTagConfig = BaseHTMLTagConfig,
-  GlobalAttributeConfig extends BaseHTMLAttributeConfig =
-    BaseHTMLAttributeConfig,
-  Tag extends string = Keyof<TagConfig>,
+type ExtractInnerHTML<TagDef> = TagDef extends { innerHTML?: infer I }
+  ? I
+  : never;
+
+type AllowedChildTags<TagDef, AllTags extends string> =
+  ExtractInnerHTML<TagDef> extends "*"
+    ? AllTags
+    : ExtractInnerHTML<TagDef> extends readonly (infer T extends string)[]
+      ? Exclude<T, "#text">
+      : never;
+
+type AllowsText<TagDef> =
+  ExtractInnerHTML<TagDef> extends "*"
+    ? true
+    : ExtractInnerHTML<TagDef> extends readonly (infer T extends string)[]
+      ? "#text" extends T
+        ? true
+        : false
+      : false;
+
+type IsVoidInnerHTML<TagDef> =
+  ExtractInnerHTML<TagDef> extends readonly [] ? true : false;
+
+type CombinedAttributes<
+  TagDef,
+  GlobalAttrs extends BaseHTMLAttributeConfig,
+> = MakeUndefinedOptional<{
+  [K in
+    | keyof ExtractTagAttributes<TagDef>
+    | keyof GlobalAttrs]: K extends keyof ExtractTagAttributes<TagDef>
+    ? DSLInfer<ExtractTagAttributes<TagDef>[K] & string>
+    : K extends keyof GlobalAttrs
+      ? DSLInfer<GlobalAttrs[K] & string>
+      : never;
+}>;
+
+type ComponentConfig<
+  TagDefs extends BaseHTMLTagConfig,
+  GlobalAttrs extends BaseHTMLAttributeConfig,
+  AllowedTags extends string,
+> =
+  AllowedTags extends Keyof<TagDefs>
+    ? {
+        tag: AllowedTags;
+        attributes?: CombinedAttributes<TagDefs[AllowedTags], GlobalAttrs>;
+        innerHTML?: InnerHTMLValue<TagDefs, GlobalAttrs, TagDefs[AllowedTags]>;
+      }
+    : never;
+
+type NamedChildren<
+  TagDefs extends BaseHTMLTagConfig,
+  GlobalAttrs extends BaseHTMLAttributeConfig,
+  AllowedTags extends string,
+  TextAllowed extends boolean,
 > = {
-  [T in Tag]: PremissableComponentNode<TagConfig, GlobalAttributeConfig, T>;
-}[Tag];
-
-export type PremissableComponentNode<
-  TagConfig extends BaseHTMLTagConfig = BaseHTMLTagConfig,
-  GlobalAttributeConfig extends BaseHTMLAttributeConfig =
-    BaseHTMLAttributeConfig,
-  Tag extends Keyof<TagConfig> = Keyof<TagConfig>,
-> = {
-  tag: Tag;
-  attributes?: WidenObject<
-    MakeUndefinedOptional<GlobalAttributeConfig & TagConfig[Tag]["attributes"]>
+  [name: string]: NamedChildrenEntry<
+    TagDefs,
+    GlobalAttrs,
+    AllowedTags,
+    TextAllowed
   >;
-  innerHTML?: (TagConfig[Tag]["innerHTML"] extends infer R | (infer R)[]
-    ? R extends "*" | "#text"
-      ?
-          | string
-          | Record<
-              PermissiveSementicName,
-              AnyComponentNode<
-                TagConfig,
-                GlobalAttributeConfig,
-                R extends "*" ? Keyof<TagConfig> : R
-              >
-            >
-      : Record<
-          PermissiveSementicName,
-          AnyComponentNode<
-            TagConfig,
-            GlobalAttributeConfig,
-            Exclude<TagConfig[Tag]["innerHTML"][number], "#text">
-          >
-        >
-    : never)[];
 };
 
-// type ValidateComponent<
-//   TagConfig extends PremissiveTagDefinition,
-//   GlobalAttributeConfig extends PermissiveAttributeConfig,
-//   T extends Keyof<TagConfig>,
-//   Component extends PremissableComponentNode<
-//     TagConfig,
-//     GlobalAttributeConfig,
-//     T
-//   >,
-// > = {
-//   [K in keyof Component]: K extends "innerHTML"
-//     ? TagConfig[Component["tag"]]["innerHTML"] extends infer R | (infer R)[]
-//       ? R extends "*" | "#text"
-//         ? Component[K]
-//         : Component[K] extends any[]
-//           ? Exclude<Component[K][number], string>[]
-//           : Component[K]
-//       : Component[K]
-//     : Component[K];
-// };
+type NamedChildrenEntry<
+  TagDefs extends BaseHTMLTagConfig,
+  GlobalAttrs extends BaseHTMLAttributeConfig,
+  AllowedTags extends string,
+  TextAllowed extends boolean,
+> = TextAllowed extends true
+  ?
+      | string
+      | ComponentConfig<TagDefs, GlobalAttrs, AllowedTags>
+      | ComponentConfig<TagDefs, GlobalAttrs, AllowedTags>[]
+  :
+      | ComponentConfig<TagDefs, GlobalAttrs, AllowedTags>
+      | ComponentConfig<TagDefs, GlobalAttrs, AllowedTags>[];
+
+type InnerHTMLValue<
+  TagDefs extends BaseHTMLTagConfig,
+  GlobalAttrs extends BaseHTMLAttributeConfig,
+  TagDef,
+> =
+  IsVoidInnerHTML<TagDef> extends true
+    ? readonly never[]
+    : NamedChildren<
+        TagDefs,
+        GlobalAttrs,
+        AllowedChildTags<TagDef, Keyof<TagDefs>>,
+        AllowsText<TagDef>
+      >;
 
 export function createComponent<
-  const TagConfig extends BaseHTMLTagConfig,
-  const GlobalAttributeConfig extends BaseHTMLAttributeConfig,
-  const T extends Keyof<TagConfig>,
-  const Component extends PremissableComponentNode<
-    TagConfig,
-    GlobalAttributeConfig,
-    T
-  >,
+  const TagDefs extends BaseHTMLTagConfig,
+  const GlobalAttrs extends BaseHTMLAttributeConfig,
 >(
-  _htmlTagAttributes: TagConfig,
-  _globalAttributes: GlobalAttributeConfig,
-  node: Simplify<{ tag: T } & Component>,
+  _tagDefs: TagDefs,
+  _globalAttrs: GlobalAttrs,
+  config: ComponentConfig<TagDefs, GlobalAttrs, Keyof<TagDefs>>,
 ) {
-  return node;
+  return config;
 }
