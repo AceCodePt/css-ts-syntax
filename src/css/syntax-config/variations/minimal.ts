@@ -12,8 +12,7 @@ export default cssSyntaxConfig(SUPPORTED_KEYWORDS, {
   "<percentage>": "`${number}%`",
 
   // https://developer.mozilla.org/en-US/docs/Web/CSS/length
-  "<length>":
-    "`${number}${'px' | 'rem' | 'em' | 'vw' | 'vh'}`",
+  "<length>": "`${number}${'px' | 'rem' | 'em' | 'vw' | 'vh'}`",
 
   // https://developer.mozilla.org/en-US/docs/Web/CSS/color_value
   "<color>":
