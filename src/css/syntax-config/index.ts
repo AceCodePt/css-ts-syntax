@@ -6,7 +6,7 @@ export function cssSyntaxConfig<
   const T extends BaseCSSSyntaxConfig,
 >(supportedKeywords: Keywords, config: ValidatedCSSSyntaxConfig<Keywords, T>) {
   for (const key in config) {
-    if (/^<.+>$/.test(key)) {
+    if (!/^<.+>$/.test(key)) {
       throw new Error(`The key ${key} should start and end with <>`);
     }
     const item = config[key];
