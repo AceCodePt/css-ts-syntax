@@ -1,6 +1,7 @@
+import { SUPPORTED_KEYWORDS } from "@/dsl/index.ts";
 import { htmlAttributeConfig } from "../index.ts";
 
-export default htmlAttributeConfig({
+export default htmlAttributeConfig(SUPPORTED_KEYWORDS, {
   id: "string | undefined",
   class: "string | undefined",
   style: "string | undefined",
