@@ -1,7 +1,17 @@
+import { dslString } from "@/dsl/index.ts";
 import type { BaseCSSSyntaxConfig, ValidatedCSSSyntaxConfig } from "./types.ts";
 
-export function cssSyntaxConfig<const T extends BaseCSSSyntaxConfig>(
-  config: ValidatedCSSSyntaxConfig<T>,
-) {
+export function cssSyntaxConfig<
+  const Keywords extends Record<string, any>,
+  const T extends BaseCSSSyntaxConfig,
+>(supportedKeywords: Keywords, config: ValidatedCSSSyntaxConfig<Keywords, T>) {
+  for (const key in config) {
+    if (/^<.+>$/.test(key)) {
+      throw new Error(`The key ${key} should start and end with <>`);
+    }
+    const item = config[key];
+    dslString(Object.assign({}, supportedKeywords, config), item);
+  }
+
   return config as T;
 }
