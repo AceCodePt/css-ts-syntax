@@ -1,11 +1,21 @@
-import type { DSLString, DSLValidate, SupportedKeywords } from "@/dsl/index.ts";
+import type { DSLInfer, DSLString, DSLValidate } from "@/dsl/index.ts";
 
 export type BaseCSSSyntaxConfig = Record<`<${string}>`, DSLString>;
 
-export type ValidatedCSSSyntaxConfig<T extends BaseCSSSyntaxConfig> = {
+export type ValidatedCSSSyntaxConfig<
+  Keywords extends Record<string, any>,
+  T extends BaseCSSSyntaxConfig,
+> = {
   [K in keyof T]: K extends string
     ? K extends `<${string}>`
-      ? DSLValidate<T[K], SupportedKeywords & T>
+      ? DSLValidate<Keywords & T, T[K]>
       : `Should be wrapped with <>`
     : T[K];
+};
+
+export type InferCSSSyntaxConfig<
+  Keywords extends Record<string, any>,
+  T extends BaseCSSSyntaxConfig,
+> = {
+  [K in keyof T]: DSLInfer<Keywords & T, T[K] & string>;
 };
