@@ -1,6 +1,6 @@
 import type {
-  BaseHTMLAttributeConfig,
-  ValidateHTMLAttributeConfig,
+  BaseHTMLAttributesConfig,
+  ValidateHTMLAttributesConfig,
 } from "../attribute-config/types.ts";
 
 export type BaseHTMLTag = string;
@@ -11,7 +11,7 @@ export type BaseInnerHTMLTagConfig<PossibleTags extends string = string> =
 export type BaseHTMLTagConfig<Tags extends string = string> = Record<
   Tags,
   {
-    attributes?: BaseHTMLAttributeConfig;
+    attributes?: BaseHTMLAttributesConfig;
     innerHTML: "*" | (Tags | "#text")[];
   }
 >;
@@ -25,7 +25,7 @@ export type ValidateHTMLTagConfig<
         // The keyof[keyof] is so the type exact i.e. no more new properties
         [K in keyof TagDefinition[Tag]]: K extends keyof BaseHTMLTagConfig[keyof BaseHTMLTagConfig]
           ? K extends "attributes"
-            ? ValidateHTMLAttributeConfig<
+            ? ValidateHTMLAttributesConfig<
                 Keywords,
                 Exclude<TagDefinition[Tag]["attributes"], undefined>
               >

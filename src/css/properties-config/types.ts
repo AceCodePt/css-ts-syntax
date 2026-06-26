@@ -9,17 +9,15 @@ export type BaseCSSPropertyValue = {
   inherits?: boolean;
   "initial-value"?: string;
 };
-export type BaseCSSPropertyConfig = Record<`--${string}`, BaseCSSPropertyValue>;
+export type BaseCSSPropertiesConfig = Record<
+  `--${string}`,
+  BaseCSSPropertyValue
+>;
 
-// So... small issue
-// We need to change the dependencies of how stuff work.
-// The syntax config is relied on supported keywords.
-// However the same supported keywords need to be used in order to run the DSLinfer
-
-export type ValidateCSSPropertyConfig<
+export type ValidateCSSPropertiesConfig<
   Keywords extends Record<string, any>,
   S extends BaseCSSSyntaxConfig,
-  P extends BaseCSSPropertyConfig,
+  P extends BaseCSSPropertiesConfig,
 > = {
   [K in keyof P]: K extends string
     ? K extends `--${string}`

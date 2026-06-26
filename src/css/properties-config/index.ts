@@ -1,18 +1,18 @@
 import { dslString } from "@/dsl/index.ts";
 import type { BaseCSSSyntaxConfig } from "../syntax-config/types.ts";
 import type {
-  BaseCSSPropertyConfig,
-  ValidateCSSPropertyConfig,
+  BaseCSSPropertiesConfig,
+  ValidateCSSPropertiesConfig,
 } from "./types.ts";
 
 export const cssPropertiesConfig = <
   const K extends Record<string, any>,
   const S extends BaseCSSSyntaxConfig,
-  const P extends BaseCSSPropertyConfig,
+  const P extends BaseCSSPropertiesConfig,
 >(
   keywords: K,
   syntaxConfig: S,
-  config: ValidateCSSPropertyConfig<K, S, P>,
+  config: ValidateCSSPropertiesConfig<K, S, P>,
 ) => {
   const entries = config;
   for (const key in entries) {

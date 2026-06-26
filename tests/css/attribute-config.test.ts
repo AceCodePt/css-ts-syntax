@@ -89,10 +89,7 @@ describe("cssAttributeConfig", () => {
     test("single token infers the raw DSL string for that token", () => {
       assertType<
         Equal<
-          InferredCSSAttributes<
-            typeof SYNTAX,
-            { width: "<length>" }
-          >,
+          InferredCSSAttributes<typeof SYNTAX, { width: "<length>" }>,
           { readonly width: "`${number}${'px' | 'rem' | 'em'}`" }
         >
       >();
@@ -117,7 +114,11 @@ describe("cssAttributeConfig", () => {
             typeof SYNTAX,
             { "letter-spacing": "'normal' | <length>" }
           >,
-          { readonly "letter-spacing": "'normal'" | "`${number}${'px' | 'rem' | 'em'}`" }
+          {
+            readonly "letter-spacing":
+              | "'normal'"
+              | "`${number}${'px' | 'rem' | 'em'}`";
+          }
         >
       >();
     });
@@ -125,10 +126,7 @@ describe("cssAttributeConfig", () => {
     test("union of two tokens infers as a union of their raw DSL strings", () => {
       assertType<
         Equal<
-          InferredCSSAttributes<
-            typeof SYNTAX,
-            { tint: "<color> | <length>" }
-          >,
+          InferredCSSAttributes<typeof SYNTAX, { tint: "<color> | <length>" }>,
           {
             readonly tint:
               | "`#${string}` | 'transparent' | 'currentColor'"

@@ -2,7 +2,7 @@ import test, { describe } from "node:test";
 import assert from "node:assert";
 import { SUPPORTED_KEYWORDS, type SupportedKeywords } from "@/dsl/index.ts";
 import { htmlAttributeConfig } from "@/html/attribute-config/index.ts";
-import type { InferHTMLAttributeConfig } from "@/html/attribute-config/types.ts";
+import type { InferHTMLAttributesConfig } from "@/html/attribute-config/types.ts";
 import { assertType, type Equal } from "../type-utils.ts";
 
 describe("htmlAttributeConfig", () => {
@@ -71,7 +71,7 @@ describe("htmlAttributeConfig", () => {
     test("single string attribute infers correctly", () => {
       assertType<
         Equal<
-          InferHTMLAttributeConfig<
+          InferHTMLAttributesConfig<
             SupportedKeywords,
             { id: "string | undefined" }
           >,
@@ -83,7 +83,7 @@ describe("htmlAttributeConfig", () => {
     test("number attribute infers correctly", () => {
       assertType<
         Equal<
-          InferHTMLAttributeConfig<
+          InferHTMLAttributesConfig<
             SupportedKeywords,
             { tabindex: "number | undefined" }
           >,
@@ -95,7 +95,7 @@ describe("htmlAttributeConfig", () => {
     test("string literal union infers correctly", () => {
       assertType<
         Equal<
-          InferHTMLAttributeConfig<
+          InferHTMLAttributesConfig<
             SupportedKeywords,
             { dir: "'ltr' | 'rtl' | 'auto' | undefined" }
           >,
@@ -107,7 +107,7 @@ describe("htmlAttributeConfig", () => {
     test("boolean attribute infers correctly", () => {
       assertType<
         Equal<
-          InferHTMLAttributeConfig<
+          InferHTMLAttributesConfig<
             SupportedKeywords,
             { draggable: "boolean | undefined" }
           >,
@@ -119,7 +119,7 @@ describe("htmlAttributeConfig", () => {
     test("mixed literal + primitive union infers correctly", () => {
       assertType<
         Equal<
-          InferHTMLAttributeConfig<
+          InferHTMLAttributesConfig<
             SupportedKeywords,
             { contenteditable: "'plaintext-only' | boolean | undefined" }
           >,
@@ -131,7 +131,7 @@ describe("htmlAttributeConfig", () => {
     test("multiple attributes infer as a mapped object", () => {
       assertType<
         Equal<
-          InferHTMLAttributeConfig<
+          InferHTMLAttributesConfig<
             SupportedKeywords,
             {
               id: "string | undefined";

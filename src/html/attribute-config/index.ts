@@ -1,15 +1,15 @@
 import { dslString } from "@/dsl/index.ts";
 import type {
-  BaseHTMLAttributeConfig,
-  ValidateHTMLAttributeConfig,
+  BaseHTMLAttributesConfig,
+  ValidateHTMLAttributesConfig,
 } from "./types.ts";
 
 export const htmlAttributeConfig = <
   const Keywords extends Record<string, any>,
-  const A extends BaseHTMLAttributeConfig,
+  const A extends BaseHTMLAttributesConfig,
 >(
   supportedKeywords: Keywords,
-  config: ValidateHTMLAttributeConfig<Keywords, A>,
+  config: ValidateHTMLAttributesConfig<Keywords, A>,
 ) => {
   for (const key in config) {
     dslString(supportedKeywords, config[key]);

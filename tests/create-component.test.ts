@@ -1,18 +1,19 @@
 import { test, describe } from "node:test";
 import assert from "node:assert";
 import { createComponent } from "../src/create-component.ts";
-import { htmlAttributeConfig } from "../src/html/attribute-config/html-attribute-config.ts";
+import { htmlAttributeConfig } from "../src/html/attribute-config/index.ts";
 import { htmlTagConfig } from "../src/html/tag-config/index.ts";
+import { SUPPORTED_KEYWORDS } from "../src/dsl/index.ts";
 
 // ==========================================
 // 1. SETUP STATIC TEST SCHEMAS
 // ==========================================
-const MOCK_SHARED_ATTRIBUTES = htmlAttributeConfig({
+const MOCK_SHARED_ATTRIBUTES = htmlAttributeConfig(SUPPORTED_KEYWORDS, {
   id: "string",
   class: "string",
 });
 
-const MOCK_TAG_ATTRIBUTES = htmlTagConfig({
+const MOCK_TAG_ATTRIBUTES = htmlTagConfig(SUPPORTED_KEYWORDS, {
   div: { innerHTML: "*" },
   p: { innerHTML: ["#text"] },
   img: { attributes: { src: "string", alt: "string" }, innerHTML: [] },
@@ -28,7 +29,7 @@ describe("validateComponent & createComponent", () => {
     test("should fail if node is null or not an object", () => {
       assert.throws(
         () =>
-          createComponent(MOCK_TAG_ATTRIBUTES, MOCK_SHARED_ATTRIBUTES, null),
+          createComponent(MOCK_TAG_ATTRIBUTES, MOCK_SHARED_ATTRIBUTES, null as any),
         /Validation Error: Provided node is not a valid component object/,
       );
     });
