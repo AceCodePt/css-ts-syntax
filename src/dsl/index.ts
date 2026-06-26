@@ -144,12 +144,30 @@ export type DSLInfer<
 export function dslString<
   const Keywords extends Record<string, any>,
   const DSL extends DSLString,
->(_supportedKeywords: Keywords, dslString: DSLValidate<Keywords, DSL>) {
-  const parts = dslString.split("|").map((p) => p.trim());
+>(supportedKeywords: Keywords, dslString: DSLValidate<Keywords, DSL>) {
+  const parts = splitOutsideQuotes(dslString).map((p) => p.trim());
 
-  if (parts.length === 0) {
+  if (parts.length === 0 || (parts.length === 1 && parts[0] === "")) {
     throw new Error(`Invalid DSL string: "${dslString}"`);
   }
+
+  for (const part of parts) {
+    const isKeyword = part in supportedKeywords;
+    const isNumericLiteral = part !== "" && !Number.isNaN(+part);
+    const isQuotedString = /^'[^']*'$|^"[^"]*"$|^`[^`]*`$/.test(part);
+    // backtick with interpolations: `...${...}...`
+    const isTemplateLiteral = /^`.*`$/.test(part);
+
+    if (
+      !isKeyword &&
+      !isNumericLiteral &&
+      !isQuotedString &&
+      !isTemplateLiteral
+    ) {
+      throw new Error(`Invalid DSL string: "${dslString}"`);
+    }
+  }
+
   return dslString;
 }
 
@@ -193,7 +211,27 @@ export function parseValueAgainstDSL<
   dslString: DSLValidate<Keywords, DSL>, // 'true'
   checkAgainst: DSLInfer<Keywords, DSL>, // 'true'
 ): DSLInfer<Keywords, DSL> {
-  const parts = splitOutsideQuotes(dslString).map((p) => p.trim());
+  // Validate the DSL string itself first (mirrors dslString() runtime check)
+  const rawParts = splitOutsideQuotes(dslString).map((p) => p.trim());
+  if (rawParts.length === 0 || (rawParts.length === 1 && rawParts[0] === "")) {
+    throw new Error(`Invalid DSL string: "${dslString}"`);
+  }
+  for (const part of rawParts) {
+    const isKeyword = part in supportedKeywords;
+    const isNumericLiteral = part !== "" && !Number.isNaN(+part);
+    const isQuotedString = /^'[^']*'$|^"[^"]*"$|^`[^`]*`$/.test(part);
+    const isTemplateLiteral = /^`.*`$/.test(part);
+    if (
+      !isKeyword &&
+      !isNumericLiteral &&
+      !isQuotedString &&
+      !isTemplateLiteral
+    ) {
+      throw new Error(`Invalid DSL string: "${dslString}"`);
+    }
+  }
+
+  const parts = rawParts;
 
   const matches = parts.some(
     (part) =>
