@@ -46,6 +46,7 @@ type IsTextAllowed<
     : false;
 
 type ValidateComponentInnerHTMLStructure<
+  Keywords extends Record<string, any>,
   HTMLAttributesConfig extends BaseHTMLAttributesConfig,
   HTMLTagConfig extends BaseHTMLTagConfig,
   CSSSyntaxConfig extends BaseCSSSyntaxConfig,
@@ -66,6 +67,7 @@ type ValidateComponentInnerHTMLStructure<
           ] extends [never]
           ? { tag: Exclude<HTMLTagConfig[Tag]["innerHTML"][number], "#text"> }
           : ValidateComponentStructure<
+              Keywords,
               HTMLAttributesConfig,
               HTMLTagConfig,
               CSSSyntaxConfig,
@@ -82,19 +84,21 @@ type ValidateComponentInnerHTMLStructure<
 >;
 
 type ValidateComponentCSSStructure<
+  Keywords extends Record<string, any>,
   CSSSyntaxConfig extends BaseCSSSyntaxConfig,
   CSSAttributesConfig extends BaseCSSAttributesConfig,
   CSSPropertiesConfig extends BaseCSSPropertiesConfig,
   T extends BaseComponentStructure,
 > = {
-  [K in keyof T["css"]]: K extends string
+  [K in keyof CSSAttributesConfig[T["tag"]]]?: K extends string
     ? K extends keyof CSSAttributesConfig
-      ? DSLInfer<SupportedKeywords & CSSSyntaxConfig, CSSAttributesConfig[K]>
+      ? DSLInfer<Keywords & CSSSyntaxConfig, CSSAttributesConfig[K]>
       : `You need to have a valid css attribute`
-    : T["css"][K];
+    : CSSAttributesConfig[T["tag"]][K];
 };
 
 type ValidateComponentStructure<
+  Keywords extends Record<string, any>,
   HTMLAttributesConfig extends BaseHTMLAttributesConfig,
   HTMLTagConfig extends BaseHTMLTagConfig,
   CSSSyntaxConfig extends BaseCSSSyntaxConfig,
@@ -107,9 +111,7 @@ type ValidateComponentStructure<
       ? Keyof<HTMLTagConfig>
       : K extends "attributes"
         ? MakeUndefinedOptional<
-            Partial<
-              InferHTMLAttributesConfig<SupportedKeywords, HTMLAttributesConfig>
-            > &
+            Partial<InferHTMLAttributesConfig<Keywords, HTMLAttributesConfig>> &
               (HTMLTagConfig[T["tag"]]["attributes"] extends BaseHTMLAttributesConfig
                 ? InferHTMLAttributesConfig<
                     SupportedKeywords,
@@ -120,6 +122,7 @@ type ValidateComponentStructure<
         : K extends "innerHTML"
           ? T["innerHTML"] extends BaseComponentInnerHTMLStructure
             ? ValidateComponentInnerHTMLStructure<
+                Keywords,
                 HTMLAttributesConfig,
                 HTMLTagConfig,
                 CSSSyntaxConfig,
@@ -131,6 +134,7 @@ type ValidateComponentStructure<
             : never
           : K extends "css"
             ? ValidateComponentCSSStructure<
+                Keywords,
                 CSSSyntaxConfig,
                 CSSAttributesConfig,
                 CSSPropertiesConfig,
@@ -141,6 +145,7 @@ type ValidateComponentStructure<
 };
 
 export function createComponent<
+  const Keywords extends Record<string, any>,
   const HTMLAttributesConfig extends BaseHTMLAttributesConfig,
   const HTMLTagConfig extends BaseHTMLTagConfig,
   const CSSSyntaxConfig extends BaseCSSSyntaxConfig,
@@ -148,12 +153,14 @@ export function createComponent<
   const CSSPropertiesConfig extends BaseCSSPropertiesConfig,
   const T extends BaseComponentStructure,
 >(
+  _supportedKeywords: Keywords,
   _HTMLAttributesConfig: HTMLAttributesConfig,
   _HTMLTagConfig: HTMLTagConfig,
   _CSSSyntaxConfig: CSSSyntaxConfig,
   _CSSAttributesConfig: CSSAttributesConfig,
   _CSSPropertiesConfig: CSSPropertiesConfig,
   config: ValidateComponentStructure<
+    Keywords,
     HTMLAttributesConfig,
     HTMLTagConfig,
     CSSSyntaxConfig,
