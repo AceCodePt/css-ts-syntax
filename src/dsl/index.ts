@@ -111,7 +111,9 @@ type SingleDSLInfer<
   Keywords extends Record<string, any>,
   Text extends string,
 > = Text extends keyof Keywords
-  ? Keywords[Text]
+  ? Keywords[Text] extends string
+    ? DSLInfer<Keywords, Keywords[Text]>
+    : Keywords[Text]
   : Text extends `${infer N extends number}`
     ? N
     : Text extends `\`${infer Str extends string}\``
