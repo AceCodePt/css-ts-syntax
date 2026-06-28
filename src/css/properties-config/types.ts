@@ -24,7 +24,6 @@ export type ValidateCSSPropertiesConfig<
       ? {
           syntax: DSLValidate<S, P[K]["syntax"]>;
           inherits: boolean;
-          // "initial-value": DSLInfer<S, P[K]["syntax"]>;
           "initial-value": InferCSSSyntax<Keywords, S, P[K]["syntax"]>;
         }
       : never
