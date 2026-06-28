@@ -129,19 +129,21 @@ export type DSLInfer<
   Text extends DSLString,
 > = [Text] extends [never]
   ? string
-  : Trim<Text> extends `\`${infer Piped extends `${string}|${string}`}\`${infer Maybe extends string}`
-    ? Piped extends `${infer Before extends string}\$\{${infer innerDSL extends string}\}${infer After extends string}`
-      ?
-          | `${Before}${DSLInfer<Keywords, Trim<innerDSL>>}${InferRestOfBackTick<Keywords, After>}`
-          | DSLInfer<Keywords, Trim<Maybe>>
-      : `${Piped}`
-    : Text extends
-          | `"${infer Piped extends `${string}|${string}`}"${infer Maybe extends string}`
-          | `'${infer Piped extends `${string}|${string}`}'${infer Maybe extends string}`
-      ? `${Piped}` | DSLInfer<Keywords, Maybe>
-      : Text extends `${infer L}|${infer R}`
-        ? SingleDSLInfer<Keywords, Trim<L>> | DSLInfer<Keywords, Trim<R>>
-        : SingleDSLInfer<Keywords, Trim<Text>>;
+  : string extends Text
+    ? string
+    : Trim<Text> extends `\`${infer Piped extends `${string}|${string}`}\`${infer Maybe extends string}`
+      ? Piped extends `${infer Before extends string}\$\{${infer innerDSL extends string}\}${infer After extends string}`
+        ?
+            | `${Before}${DSLInfer<Keywords, Trim<innerDSL>>}${InferRestOfBackTick<Keywords, After>}`
+            | DSLInfer<Keywords, Trim<Maybe>>
+        : `${Piped}`
+      : Text extends
+            | `"${infer Piped extends `${string}|${string}`}"${infer Maybe extends string}`
+            | `'${infer Piped extends `${string}|${string}`}'${infer Maybe extends string}`
+        ? `${Piped}` | DSLInfer<Keywords, Maybe>
+        : Text extends `${infer L}|${infer R}`
+          ? SingleDSLInfer<Keywords, Trim<L>> | DSLInfer<Keywords, Trim<R>>
+          : SingleDSLInfer<Keywords, Trim<Text>>;
 
 export function dslString<
   const Keywords extends Record<string, any>,
