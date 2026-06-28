@@ -1,7 +1,8 @@
 import { cssAttributeConfig } from "../index.ts";
 import commonCSSSyntax from "../../syntax-config/variations/common.ts";
+import { SUPPORTED_KEYWORDS } from "@/dsl/index.ts";
 
-export default cssAttributeConfig(commonCSSSyntax, {
+export default cssAttributeConfig(SUPPORTED_KEYWORDS, commonCSSSyntax, {
   // ── Box Model ──────────────────────────────────────────────────────────────
   width: "<length>",
   height: "<length>",
@@ -9,8 +10,7 @@ export default cssAttributeConfig(commonCSSSyntax, {
   padding: "<length>",
 
   // ── Layout ─────────────────────────────────────────────────────────────────
-  display:
-    "'block' | 'inline' | 'inline-block' | 'flex' | 'grid' | 'none'",
+  display: "'block' | 'inline' | 'inline-block' | 'flex' | 'grid' | 'none'",
   position: "'static' | 'relative' | 'absolute' | 'fixed' | 'sticky'",
   top: "<length>",
   right: "<length>",
@@ -23,7 +23,8 @@ export default cssAttributeConfig(commonCSSSyntax, {
   "flex-direction": "'row' | 'row-reverse' | 'column' | 'column-reverse'",
   "justify-content":
     "'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around'",
-  "align-items": "'stretch' | 'flex-start' | 'flex-end' | 'center' | 'baseline'",
+  "align-items":
+    "'stretch' | 'flex-start' | 'flex-end' | 'center' | 'baseline'",
   gap: "<length>",
 
   // ── Colors & Background ────────────────────────────────────────────────────

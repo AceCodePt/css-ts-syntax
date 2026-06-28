@@ -1,7 +1,8 @@
 import { cssAttributeConfig } from "../index.ts";
 import fullCSSSyntax from "../../syntax-config/variations/full.ts";
+import { SUPPORTED_KEYWORDS } from "@/dsl/index.ts";
 
-export default cssAttributeConfig(fullCSSSyntax, {
+export default cssAttributeConfig(SUPPORTED_KEYWORDS, fullCSSSyntax, {
   // ── Box Model ──────────────────────────────────────────────────────────────
   width: "<length-percentage> | <sizing-keyword>",
   "min-width": "<length-percentage> | <sizing-keyword>",
@@ -119,7 +120,8 @@ export default cssAttributeConfig(fullCSSSyntax, {
   // ── Colors & Background ────────────────────────────────────────────────────
   color: "<color>",
   opacity: "<alpha-value>",
-  "color-scheme": "'normal' | 'light' | 'dark' | 'light dark' | 'only light' | 'only dark'",
+  "color-scheme":
+    "'normal' | 'light' | 'dark' | 'light dark' | 'only light' | 'only dark'",
   "forced-color-adjust": "'auto' | 'none'",
   "accent-color": "'auto' | <color>",
   "caret-color": "'auto' | <color>",
@@ -202,7 +204,8 @@ export default cssAttributeConfig(fullCSSSyntax, {
   "line-height": "<number> | <length-percentage>",
   "letter-spacing": "'normal' | <length>",
   "word-spacing": "'normal' | <length>",
-  "text-align": "'left' | 'right' | 'center' | 'justify' | 'start' | 'end' | 'match-parent'",
+  "text-align":
+    "'left' | 'right' | 'center' | 'justify' | 'start' | 'end' | 'match-parent'",
   "text-align-last":
     "'left' | 'right' | 'center' | 'justify' | 'start' | 'end' | 'auto'",
   "text-decoration": "<string>",
@@ -213,8 +216,10 @@ export default cssAttributeConfig(fullCSSSyntax, {
   "text-decoration-thickness": "'auto' | 'from-font' | <length-percentage>",
   "text-decoration-skip-ink": "'auto' | 'none' | 'all'",
   "text-underline-offset": "'auto' | <length-percentage>",
-  "text-underline-position": "'auto' | 'from-font' | 'under' | 'left' | 'right'",
-  "text-transform": "'none' | 'uppercase' | 'lowercase' | 'capitalize' | 'full-width' | 'full-size-kana'",
+  "text-underline-position":
+    "'auto' | 'from-font' | 'under' | 'left' | 'right'",
+  "text-transform":
+    "'none' | 'uppercase' | 'lowercase' | 'capitalize' | 'full-width' | 'full-size-kana'",
   "text-indent": "<length-percentage>",
   "text-overflow": "'clip' | 'ellipsis'",
   "text-shadow": "<string>",
@@ -298,7 +303,8 @@ export default cssAttributeConfig(fullCSSSyntax, {
   transform: "<string>",
   "transform-origin": "<position>",
   "transform-style": "'flat' | 'preserve-3d'",
-  "transform-box": "'content-box' | 'border-box' | 'fill-box' | 'stroke-box' | 'view-box'",
+  "transform-box":
+    "'content-box' | 'border-box' | 'fill-box' | 'stroke-box' | 'view-box'",
   "backface-visibility": "'visible' | 'hidden'",
   translate: "<length-percentage>",
   rotate: "<angle>",
@@ -337,11 +343,14 @@ export default cssAttributeConfig(fullCSSSyntax, {
   mask: "<string>",
   "mask-image": "<image>",
   "mask-mode": "'alpha' | 'luminance' | 'match-source'",
-  "mask-repeat": "'repeat' | 'repeat-x' | 'repeat-y' | 'no-repeat' | 'space' | 'round'",
+  "mask-repeat":
+    "'repeat' | 'repeat-x' | 'repeat-y' | 'no-repeat' | 'space' | 'round'",
   "mask-position": "<position>",
   "mask-size": "'auto' | 'cover' | 'contain' | <length-percentage>",
-  "mask-origin": "'border-box' | 'padding-box' | 'content-box' | 'fill-box' | 'stroke-box' | 'view-box'",
-  "mask-clip": "'border-box' | 'padding-box' | 'content-box' | 'fill-box' | 'stroke-box' | 'view-box' | 'no-clip'",
+  "mask-origin":
+    "'border-box' | 'padding-box' | 'content-box' | 'fill-box' | 'stroke-box' | 'view-box'",
+  "mask-clip":
+    "'border-box' | 'padding-box' | 'content-box' | 'fill-box' | 'stroke-box' | 'view-box' | 'no-clip'",
   "mask-composite": "'add' | 'subtract' | 'intersect' | 'exclude'",
 
   // ── Generated Content ──────────────────────────────────────────────────────
@@ -379,7 +388,8 @@ export default cssAttributeConfig(fullCSSSyntax, {
   widows: "<integer>",
 
   // ── Writing Modes & Internationalization ───────────────────────────────────
-  "writing-mode": "'horizontal-tb' | 'vertical-rl' | 'vertical-lr' | 'sideways-rl' | 'sideways-lr'",
+  "writing-mode":
+    "'horizontal-tb' | 'vertical-rl' | 'vertical-lr' | 'sideways-rl' | 'sideways-lr'",
   direction: "'ltr' | 'rtl'",
   "unicode-bidi":
     "'normal' | 'embed' | 'isolate' | 'bidi-override' | 'isolate-override' | 'plaintext'",
@@ -408,8 +418,10 @@ export default cssAttributeConfig(fullCSSSyntax, {
   "stroke-dasharray": "'none' | <string>",
   "stroke-dashoffset": "<length-percentage>",
   "paint-order": "'normal' | 'fill' | 'stroke' | 'markers'",
-  "shape-rendering": "'auto' | 'optimizeSpeed' | 'crispEdges' | 'geometricPrecision'",
+  "shape-rendering":
+    "'auto' | 'optimizeSpeed' | 'crispEdges' | 'geometricPrecision'",
   "color-interpolation": "'auto' | 'sRGB' | 'linearRGB'",
   "color-interpolation-filters": "'auto' | 'sRGB' | 'linearRGB'",
-  "vector-effect": "'none' | 'non-scaling-stroke' | 'non-scaling-size' | 'non-rotation' | 'fixed-position'",
+  "vector-effect":
+    "'none' | 'non-scaling-stroke' | 'non-scaling-size' | 'non-rotation' | 'fixed-position'",
 });

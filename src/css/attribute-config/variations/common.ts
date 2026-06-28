@@ -1,11 +1,12 @@
 import { cssAttributeConfig } from "../index.ts";
 import commonCSSSyntax from "../../syntax-config/variations/common.ts";
+import { SUPPORTED_KEYWORDS } from "@/dsl/index.ts";
 
-export default cssAttributeConfig(commonCSSSyntax, {
+export default cssAttributeConfig(SUPPORTED_KEYWORDS,commonCSSSyntax, {
   perspective: "'none' | <length>",
 
   // ── Box Model ──────────────────────────────────────────────────────────────
-  width: "<length>",
+  width: "<length> | <percentage>",
   "min-width": "<length>",
   "max-width": "<length>",
   height: "<length>",
