@@ -5,15 +5,19 @@ export type BaseCSSAttributeValue = string;
 export type BaseCSSAttributesConfig = Record<string, BaseCSSAttributeValue>;
 
 export type ValidateCSSAttributesConfig<
+  Keywords extends Record<string, any>,
   S extends BaseCSSSyntaxConfig,
   A extends BaseCSSAttributesConfig,
 > = {
-  [K in keyof A]: K extends string ? DSLValidate<S, A[K]> : A[K];
+  [K in keyof A]: K extends string ? DSLValidate<S & Keywords, A[K]> : A[K];
 };
 
 export type InferCSSAttributesConfig<
+  Keywords extends Record<string, any>,
   S extends BaseCSSSyntaxConfig,
   A extends BaseCSSAttributesConfig,
 > = {
-  readonly [K in keyof A]: K extends string ? DSLInfer<S, A[K]> : A[K];
+  readonly [K in keyof A]: K extends string
+    ? DSLInfer<S & Keywords, A[K]>
+    : A[K];
 };

@@ -6,14 +6,16 @@ import type {
 import type { BaseCSSSyntaxConfig } from "../syntax-config/types.ts";
 
 export const cssAttributeConfig = <
+  const Keywords extends Record<string, any>,
   const S extends BaseCSSSyntaxConfig,
   const A extends BaseCSSAttributesConfig,
 >(
+  keywords: Keywords,
   syntaxConfig: S,
-  config: ValidateCSSAttributesConfig<S, A>,
+  config: ValidateCSSAttributesConfig<Keywords, S, A>,
 ) => {
   for (const key in config) {
-    dslString(syntaxConfig, config[key]);
+    dslString(Object.assign({}, syntaxConfig, keywords), config[key]);
   }
   return config as A;
 };
