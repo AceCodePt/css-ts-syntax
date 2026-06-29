@@ -626,6 +626,40 @@ describe("Template literal with pipe - `${ }`", () => {
   });
 });
 
+describe("Recursive DSL - '<length>' as `${number}{'%' | 'px'}` ", () => {
+  test("Type Inference", () => {
+    assertType<
+      Equal<
+        DSLInfer<
+          SupportedKeywords & { "<length>": "`${number}{'%' | 'px'}`" },
+          "<length>"
+        >,
+        `${number}{'%' | 'px'}`
+      >
+    >();
+  });
+  test("Runtime Validation", () => {
+    dslString(
+      Object.assign({}, SUPPORTED_KEYWORDS, {
+        "<length>": "`${number}{'%' | 'px'}`",
+      }),
+      "<length>",
+    );
+  });
+  test("Parse", () => {
+    assert.strictEqual(
+      parseValueAgainstDSL(
+        Object.assign({}, SUPPORTED_KEYWORDS, {
+          "<length>": "`${number}{'%' | 'px'}`",
+        }),
+        "<length>",
+        "1%",
+      ),
+      "1%",
+    );
+  });
+});
+
 describe("Error handling", () => {
   describe("type mismatches", () => {
     test("'string' throws for non-strings", () => {
