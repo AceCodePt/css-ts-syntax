@@ -9,21 +9,14 @@ import type {
 import type { BaseHTMLTagConfig } from "./html/tag-config/types.ts";
 import type { Keyof, MakeUndefinedOptional } from "./types.ts";
 
-type BaseComponentInnerHTMLStructure<
-  Tag extends string = string,
-  Attributes extends Record<string, string> = Record<string, string>,
-> = Record<string, BaseComponentStructure<Tag, Attributes> | string> | string;
+type BaseComponentInnerHTMLStructure = Record<string, BaseComponentStructure | string> | string;
 
 type BaseComponentStructure<
-  Tag extends string = string,
-  Attributes extends Record<string, string> = Record<string, string>,
-  InnerHTML extends string | Record<string, any> = string | Record<string, any>,
-  CSS extends Record<string, any> = Record<string, any>,
 > = {
-  tag: Tag;
-  attributes?: Attributes;
-  innerHTML?: InnerHTML;
-  css?: CSS;
+  tag: string;
+  attributes?: Record<string, string>;
+  innerHTML?: BaseComponentInnerHTMLStructure;
+  css?: Record<string, any>;
 };
 
 type IsTextAllowed<
@@ -35,7 +28,7 @@ type IsTextAllowed<
     ? true
     : false;
 
-type ValidateComponentInnerHTMLStructure<
+export type ValidateComponentInnerHTMLStructure<
   Keywords extends Record<string, any>,
   HTMLAttributesConfig extends BaseHTMLAttributesConfig,
   HTMLTagConfig extends BaseHTMLTagConfig,
@@ -73,7 +66,7 @@ type ValidateComponentInnerHTMLStructure<
   true extends IsTextAllowed<HTMLTagConfig, Tag> ? never : string
 >;
 
-type ValidateComponentCSSStructure<
+export type ValidateComponentCSSStructure<
   Keywords extends Record<string, any>,
   CSSSyntaxConfig extends BaseCSSSyntaxConfig,
   CSSAttributesConfig extends BaseCSSAttributesConfig,
@@ -101,7 +94,7 @@ type ValidateComponentCSSStructure<
       }
     : {});
 
-type ValidateComponentStructure<
+export type ValidateComponentStructure<
   Keywords extends Record<string, any>,
   HTMLAttributesConfig extends BaseHTMLAttributesConfig,
   HTMLTagConfig extends BaseHTMLTagConfig,
