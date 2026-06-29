@@ -738,6 +738,131 @@ describe("Error handling", () => {
       // @ts-expect-error
       assert.throws(() => parseValueAgainstDSL(SUPPORTED_KEYWORDS, "", "hi"));
     });
+
+    test("partially-parsable union with quoted literal throws", () => {
+      assert.throws(() =>
+        // @ts-expect-error
+        dslString(SUPPORTED_KEYWORDS, "'xyz' | xyz"),
+      );
+      assert.throws(() =>
+        // @ts-expect-error
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "'xyz' | xyz", "xyz"),
+      );
+    });
+
+    test("trailing pipe throws", () => {
+      assert.throws(() =>
+        // @ts-expect-error
+        dslString(SUPPORTED_KEYWORDS, "string |"),
+      );
+      assert.throws(() =>
+        // @ts-expect-error
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "string |", ""),
+      );
+    });
+
+    test("leading pipe throws", () => {
+      assert.throws(() =>
+        // @ts-expect-error
+        dslString(SUPPORTED_KEYWORDS, "| string"),
+      );
+      assert.throws(() =>
+        // @ts-expect-error
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "| string", ""),
+      );
+    });
+
+    test("double pipe throws", () => {
+      assert.throws(() =>
+        // @ts-expect-error
+        dslString(SUPPORTED_KEYWORDS, "string || number"),
+      );
+      assert.throws(() =>
+        // @ts-expect-error
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "string || number", ""),
+      );
+    });
+
+    test("empty union parts throws", () => {
+      assert.throws(() =>
+        // @ts-expect-error
+        dslString(SUPPORTED_KEYWORDS, "string |  | number"),
+      );
+      assert.throws(() =>
+        // @ts-expect-error
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "string |  | number", ""),
+      );
+    });
+
+    test("just a pipe throws", () => {
+      assert.throws(() =>
+        // @ts-expect-error
+        dslString(SUPPORTED_KEYWORDS, "|"),
+      );
+      assert.throws(() =>
+        // @ts-expect-error
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "|", ""),
+      );
+    });
+
+    test("illegal characters throws", () => {
+      assert.throws(() =>
+        // @ts-expect-error
+        dslString(SUPPORTED_KEYWORDS, "(string)"),
+      );
+      assert.throws(() =>
+        // @ts-expect-error
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "(string)", ""),
+      );
+      assert.throws(() =>
+        // @ts-expect-error
+        dslString(SUPPORTED_KEYWORDS, "[string]"),
+      );
+      assert.throws(() =>
+        // @ts-expect-error
+        dslString(SUPPORTED_KEYWORDS, "{string}"),
+      );
+    });
+
+    test("mismatched quotes throws", () => {
+      assert.throws(() =>
+        // @ts-expect-error
+        dslString(SUPPORTED_KEYWORDS, "'unclosed"),
+      );
+      assert.throws(() =>
+        // @ts-expect-error
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "'unclosed", ""),
+      );
+      assert.throws(() =>
+        // @ts-expect-error
+        dslString(SUPPORTED_KEYWORDS, "unclosed'"),
+      );
+      assert.throws(() =>
+        // @ts-expect-error
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "unclosed'", ""),
+      );
+    });
+
+    test("whitespace-only throws", () => {
+      assert.throws(() =>
+        // @ts-expect-error
+        dslString(SUPPORTED_KEYWORDS, "   "),
+      );
+      assert.throws(() =>
+        // @ts-expect-error
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "   ", "" as never),
+      );
+    });
+
+    test("unknown keyword in template interpolation is type-level error only", () => {
+      // Runtime treats it as a valid backtick-quoted string literal
+      dslString(SUPPORTED_KEYWORDS, "`/${${unknown}}/`");
+      assert.strictEqual(
+        // @ts-expect-error — unknown keyword is invalid at type level
+        parseValueAgainstDSL(SUPPORTED_KEYWORDS, "`/${${unknown}}/`", ""),
+        "",
+      );
+    });
   });
 
   describe("error messages", () => {
