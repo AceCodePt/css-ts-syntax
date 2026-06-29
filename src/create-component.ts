@@ -9,21 +9,6 @@ import type {
 import type { BaseHTMLTagConfig } from "./html/tag-config/types.ts";
 import type { Keyof, MakeUndefinedOptional } from "./types.ts";
 
-// const comp = {
-//   tag: "a",
-//   attributes: {},
-//   innerHTML: {
-//     icon: {
-//       tag: "svg",
-//     },
-//     text: "",
-//   },
-//   css: {
-//     width: "100%",
-//     "> img": {},
-//     "> title": {},
-//   },
-// };
 
 type BaseComponentInnerHTMLStructure =
   | Record<string, BaseComponentStructure | string>
