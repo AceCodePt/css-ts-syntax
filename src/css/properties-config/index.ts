@@ -16,6 +16,11 @@ export const cssPropertiesConfig = <
 ) => {
   const entries = config;
   for (const key in entries) {
+    if (!key.startsWith("--")) {
+      throw new Error(
+        `You must have the property start with -- instead like --${key}`,
+      );
+    }
     const entry = entries[key];
     if (typeof entry === "object") {
       const syntax = entry.syntax;
