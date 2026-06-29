@@ -37,6 +37,7 @@
   - [x] Parse
   - [x] Test
 
+
 - [x] **Union Type** - `|`
   - [x] With Primitives - `string | number | bigint | boolean | undefined`
     - [x] Type Validation
@@ -96,6 +97,13 @@
     - [ ] Parse
     - [ ] Test
 
+- [x] Recursive DSL - `<length>` as `${number}{'%' | 'px'}` 
+  - [x] Type Validation
+  - [x] Type Inference
+  - [x] Runtime Validation
+  - [x] Parse
+  - [x] Test
+
 - [ ] **Negative Cases**
   - [ ] Fails on non-existing keyword `"xyz"`
     - [ ] Type Validation
@@ -114,21 +122,9 @@
 
 ## HTML Attributes
 
-- [x] Type Validation
-- [x] Type Inference
-- [ ] Runtime Validation
-- [ ] Parse
-- [ ] Test
-- [x] Variations
-
 ## HTML Tags
-
-### Variations
 
 ## CSS Syntax
 
-### Variations
-
 ## CSS Attributes
 
-### Variations
