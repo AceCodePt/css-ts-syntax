@@ -1,10 +1,10 @@
 import test, { describe } from "node:test";
 import assert from "node:assert";
+import { SUPPORTED_KEYWORDS, type SupportedKeywords } from "@/dsl/index.ts";
 import { cssAttributeConfig } from "@/css/attribute-config/index.ts";
-import type { InferredCSSAttributes } from "@/css/attribute-config/index.ts";
+import type { ValidateCSSAttributesConfig } from "@/css/attribute-config/types.ts";
 import { assertType, type Equal } from "../type-utils.ts";
 
-// A self-contained syntax object — no import from the syntax-config module needed.
 const SYNTAX = {
   "<length>": "`${number}${'px' | 'rem' | 'em'}`",
   "<color>": "`#${string}` | 'transparent' | 'currentColor'",
@@ -15,16 +15,83 @@ const SYNTAX = {
 } as const;
 
 describe("cssAttributeConfig", () => {
+  describe("Type Validation", () => {
+    test("accepts a single token attribute", () => {
+      assertType<
+        Equal<
+          ValidateCSSAttributesConfig<
+            SupportedKeywords,
+            typeof SYNTAX,
+            { width: "<length>" }
+          >,
+          { width: "<length>" }
+        >
+      >();
+    });
+
+    test("accepts multiple token attributes", () => {
+      assertType<
+        Equal<
+          ValidateCSSAttributesConfig<
+            SupportedKeywords,
+            typeof SYNTAX,
+            { width: "<length>"; color: "<color>"; opacity: "<number>" }
+          >,
+          { width: "<length>"; color: "<color>"; opacity: "<number>" }
+        >
+      >();
+    });
+
+    test("accepts quoted literal values", () => {
+      assertType<
+        Equal<
+          ValidateCSSAttributesConfig<
+            SupportedKeywords,
+            typeof SYNTAX,
+            { display: "'block' | 'inline' | 'none'" }
+          >,
+          { display: "'block' | 'inline' | 'none'" }
+        >
+      >();
+    });
+
+    test("accepts mixed token + literal union", () => {
+      assertType<
+        Equal<
+          ValidateCSSAttributesConfig<
+            SupportedKeywords,
+            typeof SYNTAX,
+            { "letter-spacing": "'normal' | <length>" }
+          >,
+          { "letter-spacing": "'normal' | <length>" }
+        >
+      >();
+    });
+
+    test("accepts union of two tokens", () => {
+      assertType<
+        Equal<
+          ValidateCSSAttributesConfig<
+            SupportedKeywords,
+            typeof SYNTAX,
+            { tint: "<color> | <length>" }
+          >,
+          { tint: "<color> | <length>" }
+        >
+      >();
+    });
+  });
+
   describe("Runtime Validation", () => {
     test("accepts a single token attribute", () => {
-      const config = cssAttributeConfig(SYNTAX, {
+      const config = cssAttributeConfig(SUPPORTED_KEYWORDS, SYNTAX, {
         width: "<length>",
       });
       assert.deepStrictEqual(config, { width: "<length>" });
     });
 
     test("accepts multiple token attributes", () => {
-      const config = cssAttributeConfig(SYNTAX, {
+      const config = cssAttributeConfig(SUPPORTED_KEYWORDS, SYNTAX, {
         width: "<length>",
         color: "<color>",
         opacity: "<number>",
@@ -33,22 +100,11 @@ describe("cssAttributeConfig", () => {
         width: "<length>",
         color: "<color>",
         opacity: "<number>",
-      });
-    });
-
-    test("accepts a union of tokens", () => {
-      const config = cssAttributeConfig(SYNTAX, {
-        "transition-duration": "<time>",
-        "animation-duration": "<time>",
-      });
-      assert.deepStrictEqual(config, {
-        "transition-duration": "<time>",
-        "animation-duration": "<time>",
       });
     });
 
     test("accepts quoted literal values", () => {
-      const config = cssAttributeConfig(SYNTAX, {
+      const config = cssAttributeConfig(SUPPORTED_KEYWORDS, SYNTAX, {
         display: "'block' | 'inline' | 'flex' | 'none'",
         position: "'static' | 'relative' | 'absolute'",
       });
@@ -59,7 +115,7 @@ describe("cssAttributeConfig", () => {
     });
 
     test("accepts a mixed token + quoted literal union", () => {
-      const config = cssAttributeConfig(SYNTAX, {
+      const config = cssAttributeConfig(SUPPORTED_KEYWORDS, SYNTAX, {
         "letter-spacing": "'normal' | <length>",
       });
       assert.deepStrictEqual(config, {
@@ -68,101 +124,85 @@ describe("cssAttributeConfig", () => {
     });
 
     test("accepts an empty config", () => {
-      const config = cssAttributeConfig(SYNTAX, {});
+      const config = cssAttributeConfig(SUPPORTED_KEYWORDS, SYNTAX, {});
       assert.deepStrictEqual(config, {});
     });
 
     test("returns the same object reference", () => {
       const input = { width: "<length>" } as const;
-      const config = cssAttributeConfig(SYNTAX, input);
+      const config = cssAttributeConfig(SUPPORTED_KEYWORDS, SYNTAX, input);
       assert.strictEqual(config, input);
     });
-  });
 
-  describe("Type Inference", () => {
-    // InferredCSSAttributes uses InferDSL which maps:
-    //   - a known <token> key → the raw DSL string stored for it in the syntax object
-    //   - a quoted literal like "'block'" → the quoted string literal (e.g. "'block'")
-    // The inferred values are DSL-string-level types, not resolved JS primitive types.
-    // The result object is `readonly` because of the Simplify wrapper.
-
-    test("single token infers the raw DSL string for that token", () => {
-      assertType<
-        Equal<
-          InferredCSSAttributes<typeof SYNTAX, { width: "<length>" }>,
-          { readonly width: "`${number}${'px' | 'rem' | 'em'}`" }
-        >
-      >();
-    });
-
-    test("pipe-separated quoted literals infer as their individual quoted string types", () => {
-      assertType<
-        Equal<
-          InferredCSSAttributes<
-            typeof SYNTAX,
-            { display: "'block' | 'flex' | 'none'" }
-          >,
-          { readonly display: "'block'" | "'flex'" | "'none'" }
-        >
-      >();
-    });
-
-    test("union of a literal and a token infers as a union of their DSL strings", () => {
-      assertType<
-        Equal<
-          InferredCSSAttributes<
-            typeof SYNTAX,
-            { "letter-spacing": "'normal' | <length>" }
-          >,
-          {
-            readonly "letter-spacing":
-              | "'normal'"
-              | "`${number}${'px' | 'rem' | 'em'}`";
-          }
-        >
-      >();
-    });
-
-    test("union of two tokens infers as a union of their raw DSL strings", () => {
-      assertType<
-        Equal<
-          InferredCSSAttributes<typeof SYNTAX, { tint: "<color> | <length>" }>,
-          {
-            readonly tint:
-              | "`#${string}` | 'transparent' | 'currentColor'"
-              | "`${number}${'px' | 'rem' | 'em'}`";
-          }
-        >
-      >();
-    });
-
-    test("multiple attributes infer as a mapped object", () => {
-      assertType<
-        Equal<
-          InferredCSSAttributes<
-            typeof SYNTAX,
-            {
-              width: "<length>";
-              display: "'block' | 'flex' | 'none'";
-            }
-          >,
-          {
-            readonly width: "`${number}${'px' | 'rem' | 'em'}`";
-            readonly display: "'block'" | "'flex'" | "'none'";
-          }
-        >
-      >();
+    test("accepts union of two tokens", () => {
+      const config = cssAttributeConfig(SUPPORTED_KEYWORDS, SYNTAX, {
+        "border-style": "<line-style>",
+      });
+      assert.deepStrictEqual(config, { "border-style": "<line-style>" });
     });
   });
 
   describe("Error handling", () => {
-    test("unknown token is a type-level error (not a runtime throw)", () => {
-      // cssAttributeConfig has no runtime validation for token existence;
-      // the guard is enforced solely at the type level via CSSAttributeConfig.
-      assert.doesNotThrow(() =>
-        // @ts-expect-error
-        cssAttributeConfig(SYNTAX, { width: "<unknown-token>" }),
+    test("unknown token throws at runtime", () => {
+      assert.throws(
+        () =>
+          (cssAttributeConfig as any)(SUPPORTED_KEYWORDS, SYNTAX, {
+            width: "<unknown-token>",
+          }),
+        /Invalid DSL string/,
       );
+    });
+
+    test("invalid DSL string throws at runtime", () => {
+      assert.throws(
+        () =>
+          (cssAttributeConfig as any)(SUPPORTED_KEYWORDS, SYNTAX, {
+            width: "xyz",
+          }),
+        /Invalid DSL string/,
+      );
+    });
+
+    test("partially invalid union throws at runtime", () => {
+      assert.throws(
+        () =>
+          (cssAttributeConfig as any)(SUPPORTED_KEYWORDS, SYNTAX, {
+            width: "<length> | xyz",
+          }),
+        /Invalid DSL string/,
+      );
+    });
+  });
+
+  describe("Edge Cases", () => {
+    test("empty config is accepted", () => {
+      const config = cssAttributeConfig(SUPPORTED_KEYWORDS, SYNTAX, {});
+      assert.deepStrictEqual(config, {});
+    });
+
+    test("syntax token with chained references resolves at runtime", () => {
+      const extendedSyntax = {
+        ...SYNTAX,
+        "<length-percentage>": "<length> | <percentage>",
+        "<percentage>": "`${number}%`",
+      } as const;
+      const config = cssAttributeConfig(SUPPORTED_KEYWORDS, extendedSyntax, {
+        width: "<length-percentage>",
+      });
+      assert.deepStrictEqual(config, { width: "<length-percentage>" });
+    });
+
+    test("statically known syntax config passes type validation", () => {
+      assertType<
+        Equal<
+          ValidateCSSAttributesConfig<
+            SupportedKeywords,
+            typeof SYNTAX,
+            { display: "'none' | 'block' | 'inline'" }
+          >,
+          { display: "'none' | 'block' | 'inline'" }
+        >
+      >();
     });
   });
 });

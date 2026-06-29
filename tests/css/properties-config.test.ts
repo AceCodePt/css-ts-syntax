@@ -1,0 +1,229 @@
+import test, { describe } from "node:test";
+import assert from "node:assert";
+import { SUPPORTED_KEYWORDS, type SupportedKeywords } from "@/dsl/index.ts";
+import { cssPropertiesConfig } from "@/css/properties-config/index.ts";
+import type { ValidateCSSPropertiesConfig } from "@/css/properties-config/types.ts";
+import { assertType, type Equal } from "../type-utils.ts";
+
+const SYNTAX = {
+  "<length>": "`${number}${'px' | 'rem' | 'em'}`",
+  "<color>": "`#${string}` | 'transparent' | 'currentColor'",
+  "<number>": "`${number}`",
+  "<integer>": "`${bigint}`",
+  "<percentage>": "`${number}%`",
+} as const;
+
+describe("cssPropertiesConfig", () => {
+  describe("Type Validation", () => {
+    test("accepts a valid custom property", () => {
+      assertType<
+        Equal<
+          ValidateCSSPropertiesConfig<
+            SupportedKeywords,
+            typeof SYNTAX,
+            {
+              "--a": {
+                syntax: "<percentage>";
+                inherits: true;
+                "initial-value": "1%";
+              };
+            }
+          >,
+          {
+            "--a": {
+              syntax: "<percentage>";
+              inherits: boolean;
+              "initial-value": `${number}%`;
+            };
+          }
+        >
+      >();
+    });
+
+    test("accepts multiple custom properties", () => {
+      assertType<
+        Equal<
+          ValidateCSSPropertiesConfig<
+            SupportedKeywords,
+            typeof SYNTAX,
+            {
+              "--a": {
+                syntax: "<percentage>";
+                inherits: true;
+                "initial-value": "1%";
+              };
+              "--_a": {
+                syntax: "<integer>";
+                inherits: false;
+                "initial-value": "1";
+              };
+            }
+          >,
+          {
+            "--a": {
+              syntax: "<percentage>";
+              inherits: boolean;
+              "initial-value": `${number}%`;
+            };
+            "--_a": {
+              syntax: "<integer>";
+              inherits: boolean;
+              "initial-value": `${bigint}`;
+            };
+          }
+        >
+      >();
+    });
+  });
+
+  describe("Runtime Validation", () => {
+    test("accepts a single custom property with all fields", () => {
+      const config = cssPropertiesConfig(SUPPORTED_KEYWORDS, SYNTAX, {
+        "--a": {
+          syntax: "<percentage>",
+          inherits: true,
+          "initial-value": "1%",
+        },
+      });
+      assert.deepStrictEqual(config, {
+        "--a": {
+          syntax: "<percentage>",
+          inherits: true,
+          "initial-value": "1%",
+        },
+      });
+    });
+
+    test("accepts a property without initial-value", () => {
+      const config = (cssPropertiesConfig as any)(SUPPORTED_KEYWORDS, SYNTAX, {
+        "--a": { syntax: "<number>", inherits: false },
+      });
+      assert.deepStrictEqual(config, {
+        "--a": { syntax: "<number>", inherits: false },
+      });
+    });
+
+    test("accepts a property with boolean inherits", () => {
+      const config = cssPropertiesConfig(SUPPORTED_KEYWORDS, SYNTAX, {
+        "--bg": {
+          syntax: "<color>",
+          inherits: false,
+          "initial-value": "transparent",
+        },
+      });
+      assert.deepStrictEqual(config, {
+        "--bg": {
+          syntax: "<color>",
+          inherits: false,
+          "initial-value": "transparent",
+        },
+      });
+    });
+
+    test("accepts a property with template literal syntax", () => {
+      const config = (cssPropertiesConfig as any)(SUPPORTED_KEYWORDS, SYNTAX, {
+        "--custom": { syntax: "<length>", inherits: false },
+      });
+      assert.deepStrictEqual(config, {
+        "--custom": { syntax: "<length>", inherits: false },
+      });
+    });
+
+    test("returns the same object reference", () => {
+      const input = {
+        "--a": {
+          syntax: "<percentage>",
+          inherits: true,
+          "initial-value": "1%",
+        },
+      } as const;
+      const config = cssPropertiesConfig(SUPPORTED_KEYWORDS, SYNTAX, input);
+      assert.strictEqual(config, input);
+    });
+  });
+
+  describe("Error handling", () => {
+    test("invalid DSL syntax string throws at runtime", () => {
+      assert.throws(
+        () =>
+          (cssPropertiesConfig as any)(SUPPORTED_KEYWORDS, SYNTAX, {
+            "--a": { syntax: "xyz", inherits: true },
+          }),
+        /Invalid DSL string/,
+      );
+    });
+
+    test("partially invalid syntax union throws at runtime", () => {
+      assert.throws(
+        () =>
+          (cssPropertiesConfig as any)(SUPPORTED_KEYWORDS, SYNTAX, {
+            "--a": { syntax: "<length> | xyz", inherits: false },
+          }),
+        /Invalid DSL string/,
+      );
+    });
+
+    test("property name without -- prefix throws at runtime", () => {
+      assert.throws(
+        () =>
+          (cssPropertiesConfig as any)(SUPPORTED_KEYWORDS, SYNTAX, {
+            a: { syntax: "<number>", inherits: false },
+          }),
+        /You must have the property start with --/,
+      );
+    });
+  });
+
+  describe("Edge Cases", () => {
+    test("empty config is accepted", () => {
+      const config = cssPropertiesConfig(SUPPORTED_KEYWORDS, SYNTAX, {});
+      assert.deepStrictEqual(config, {});
+    });
+
+    test("property name with underscore prefix is accepted", () => {
+      const config = cssPropertiesConfig(SUPPORTED_KEYWORDS, SYNTAX, {
+        "--_a": { syntax: "<integer>", inherits: false, "initial-value": "1" },
+      });
+      assert.deepStrictEqual(config, {
+        "--_a": { syntax: "<integer>", inherits: false, "initial-value": "1" },
+      });
+    });
+
+    test("multiple custom properties with various syntax types", () => {
+      const config = cssPropertiesConfig(SUPPORTED_KEYWORDS, SYNTAX, {
+        "--main-color": {
+          syntax: "<color>",
+          inherits: false,
+          "initial-value": "currentColor",
+        },
+        "--spacing": {
+          syntax: "<length>",
+          inherits: true,
+          "initial-value": "1rem",
+        },
+        "--opacity": {
+          syntax: "<number>",
+          inherits: false,
+          "initial-value": "1",
+        },
+      });
+      assert.deepStrictEqual(config, {
+        "--main-color": {
+          syntax: "<color>",
+          inherits: false,
+          "initial-value": "currentColor",
+        },
+        "--spacing": {
+          syntax: "<length>",
+          inherits: true,
+          "initial-value": "1rem",
+        },
+        "--opacity": {
+          syntax: "<number>",
+          inherits: false,
+          "initial-value": "1",
+        },
+      });
+    });
+  });
+});
