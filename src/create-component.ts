@@ -9,16 +9,21 @@ import type {
 import type { BaseHTMLTagConfig } from "./html/tag-config/types.ts";
 import type { Keyof, MakeUndefinedOptional } from "./types.ts";
 
+type BaseComponentInnerHTMLStructure<
+  Tag extends string = string,
+  Attributes extends Record<string, string> = Record<string, string>,
+> = Record<string, BaseComponentStructure<Tag, Attributes> | string> | string;
 
-type BaseComponentInnerHTMLStructure =
-  | Record<string, BaseComponentStructure | string>
-  | string;
-
-type BaseComponentStructure = {
-  tag: string;
-  attributes?: Record<string, string>;
-  innerHTML?: BaseComponentInnerHTMLStructure;
-  css?: Record<string, any>;
+type BaseComponentStructure<
+  Tag extends string = string,
+  Attributes extends Record<string, string> = Record<string, string>,
+  InnerHTML extends string | Record<string, any> = string | Record<string, any>,
+  CSS extends Record<string, any> = Record<string, any>,
+> = {
+  tag: Tag;
+  attributes?: Attributes;
+  innerHTML?: InnerHTML;
+  css?: CSS;
 };
 
 type IsTextAllowed<
@@ -75,12 +80,26 @@ type ValidateComponentCSSStructure<
   CSSPropertiesConfig extends BaseCSSPropertiesConfig,
   T extends BaseComponentStructure,
 > = {
-  [K in keyof CSSAttributesConfig[T["tag"]]]?: K extends string
-    ? K extends keyof CSSAttributesConfig
-      ? DSLInfer<Keywords & CSSSyntaxConfig, CSSAttributesConfig[K]>
-      : `You need to have a valid css attribute`
-    : CSSAttributesConfig[T["tag"]][K];
-};
+  [K in keyof CSSAttributesConfig]?: K extends string
+    ? DSLInfer<Keywords & CSSSyntaxConfig, CSSAttributesConfig[K]>
+    : CSSAttributesConfig[K];
+} & {
+  [K in keyof CSSPropertiesConfig]?: K extends `--${string}`
+    ? DSLInfer<Keywords & CSSSyntaxConfig, CSSPropertiesConfig[K]["syntax"]>
+    : CSSPropertiesConfig[K];
+} & (T["innerHTML"] extends Record<string, BaseComponentStructure | string>
+    ? {
+        [K in keyof T["innerHTML"] as `> ${K & string}`]?: T["innerHTML"][K] extends BaseComponentStructure
+          ? ValidateComponentCSSStructure<
+              Keywords,
+              CSSSyntaxConfig,
+              CSSAttributesConfig,
+              CSSPropertiesConfig,
+              T["innerHTML"][K]
+            >
+          : T["innerHTML"][K];
+      }
+    : {});
 
 type ValidateComponentStructure<
   Keywords extends Record<string, any>,
@@ -116,7 +135,7 @@ type ValidateComponentStructure<
                 T["tag"],
                 T["innerHTML"]
               >
-            : never
+            : BaseComponentInnerHTMLStructure
           : K extends "css"
             ? ValidateComponentCSSStructure<
                 Keywords,
