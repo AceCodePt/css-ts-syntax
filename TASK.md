@@ -104,219 +104,319 @@
   - [x] Parse
   - [x] Test
 
-- [ ] **Negative Cases**
-  - [ ] Fails on non-existing keyword `"xyz"`
-    - [ ] Type Validation
-    - [ ] Type Inference
+- [x] **Negative Cases**
+  - [x] Fails on non-existing keyword `"xyz"`
+    - [x] Type Validation
+    - [x] Type Inference
+    - [x] Runtime Validation
+    - [x] Parse
+    - [x] Test
+  - [x] Fails on partially parsable union `"'xyz' | xyz"`
+    - [x] Type Validation
+    - [x] Type Inference
+    - [x] Runtime Validation
+    - [x] Parse
+    - [x] Test
+  - [x] Fails on empty string `""`
+    - [x] Type Validation
+    - [x] Type Inference
+    - [x] Runtime Validation
+    - [x] Parse
+    - [x] Test
+  - [x] Fails on trailing pipe `"string |"`
+    - [x] Type Validation
+    - [x] Type Inference
+    - [x] Runtime Validation
+    - [x] Parse
+    - [x] Test
+  - [x] Fails on leading pipe `"| string"`
+    - [x] Type Validation
+    - [x] Type Inference
+    - [x] Runtime Validation
+    - [x] Parse
+    - [x] Test
+  - [x] Fails on double pipe `"string || number"`
+    - [x] Type Validation
+    - [x] Type Inference
+    - [x] Runtime Validation
+    - [x] Parse
+    - [x] Test
+  - [x] Fails on empty union parts `"string |  | number"`
+    - [x] Type Validation
+    - [x] Type Inference
+    - [x] Runtime Validation
+    - [x] Parse
+    - [x] Test
+  - [x] Fails on just a pipe `"|"`
+    - [x] Type Validation
+    - [x] Type Inference
+    - [x] Runtime Validation
+    - [x] Parse
+    - [x] Test
+  - [x] Fails on illegal characters `( ) [ ] { }`
+    - [x] Type Validation
+    - [x] Type Inference
+    - [x] Runtime Validation
+    - [x] Parse
+    - [x] Test
+  - [x] Fails on mismatched quotes `"'unclosed"`, `"unclosed'"`
+    - [x] Type Validation
+    - [x] Type Inference
+    - [x] Runtime Validation
+    - [x] Parse
+    - [x] Test
+  - [x] Fails on whitespace-only `"   "`
+    - [x] Type Validation
+    - [x] Type Inference
+    - [x] Runtime Validation
+    - [x] Parse
+    - [x] Test
+  - [x] Fails on unknown keyword in template interpolation `` `/${${unknown}}/` `` *(type-level only, runtime treats as quoted string)*
+    - [x] Type Validation
+    - [x] Type Inference
     - [ ] Runtime Validation
     - [ ] Parse
-    - [ ] Test
-  - [ ] Fails on partially parsable union `"'xyz' | xyz"`
-    - [ ] Type Validation
-    - [ ] Type Inference
-    - [ ] Runtime Validation
-    - [ ] Parse
-    - [ ] Test
-  - [ ] Fails on empty string `""`
-    - [ ] Type Validation
-    - [ ] Type Inference
-    - [ ] Runtime Validation
-    - [ ] Parse
-    - [ ] Test
-  - [ ] Fails on trailing pipe `"string |"`
-    - [ ] Type Validation
-    - [ ] Type Inference
-    - [ ] Runtime Validation
-    - [ ] Parse
-    - [ ] Test
-  - [ ] Fails on leading pipe `"| string"`
-    - [ ] Type Validation
-    - [ ] Type Inference
-    - [ ] Runtime Validation
-    - [ ] Parse
-    - [ ] Test
-  - [ ] Fails on double pipe `"string || number"`
-    - [ ] Type Validation
-    - [ ] Type Inference
-    - [ ] Runtime Validation
-    - [ ] Parse
-    - [ ] Test
-  - [ ] Fails on empty union parts `"string |  | number"`
-    - [ ] Type Validation
-    - [ ] Type Inference
-    - [ ] Runtime Validation
-    - [ ] Parse
-    - [ ] Test
-  - [ ] Fails on just a pipe `"|"`
-    - [ ] Type Validation
-    - [ ] Type Inference
-    - [ ] Runtime Validation
-    - [ ] Parse
-    - [ ] Test
-  - [ ] Fails on illegal characters `( ) [ ] { }`
-    - [ ] Type Validation
-    - [ ] Type Inference
-    - [ ] Runtime Validation
-    - [ ] Parse
-    - [ ] Test
-  - [ ] Fails on mismatched quotes `"'unclosed"`, `"unclosed'"`
-    - [ ] Type Validation
-    - [ ] Type Inference
-    - [ ] Runtime Validation
-    - [ ] Parse
-    - [ ] Test
-  - [ ] Fails on whitespace-only `"   "`
-    - [ ] Type Validation
-    - [ ] Type Inference
-    - [ ] Runtime Validation
-    - [ ] Parse
-    - [ ] Test
-  - [ ] Fails on unknown keyword in template interpolation `` `/${${unknown}}/` ``
-    - [ ] Type Validation
-    - [ ] Type Inference
-    - [ ] Runtime Validation
-    - [ ] Parse
-    - [ ] Test
-  - [ ] Fails on type mismatch in `parseValueAgainstDSL` - value doesn't match DSL
-    - [ ] `"string"` rejects non-strings (number, boolean, undefined)
-    - [ ] `"number"` rejects non-numbers (string, bigint)
-    - [ ] `"boolean"` rejects truthy/falsy non-booleans (1, "")
-    - [ ] `"undefined"` rejects null
+    - [x] Test
+  - [x] Fails on type mismatch in `parseValueAgainstDSL` - value doesn't match DSL
+    - [x] `"string"` rejects non-strings (number, boolean, undefined)
+    - [x] `"number"` rejects non-numbers (string, bigint)
+    - [x] `"boolean"` rejects truthy/falsy non-booleans (1, "")
+    - [x] `"undefined"` rejects null
 
 ---
 
 ## HTML Attributes
 
-- [ ] **`htmlAttributeConfig` builder** - validates attribute DSL strings at runtime
-  - [ ] Type Validation
-  - [ ] Type Inference
-  - [ ] Runtime Validation
-  - [ ] Test
+- [x] **`htmlAttributeConfig` builder** - validates attribute DSL strings at runtime
+  - [x] Type Validation
+  - [x] Type Inference
+  - [x] Runtime Validation
+  - [x] Test
 
-- [ ] **Edge Cases**
-  - [ ] Empty config `{}` accepted
-  - [ ] Typed `as const` vs mutable config
-  - [ ] Object reference identity preserved
-  - [ ] Invalid DSL string throws error
+- [x] **Edge Cases**
+  - [x] Empty config `{}` accepted
+  - [x] Typed `as const` vs mutable config
+  - [x] Object reference identity preserved
+  - [x] Invalid DSL string throws error
 
 ## HTML Tags
 
-- [ ] **`htmlTagConfig` builder** - validates tag definitions, cross-references, and attribute DSL
-  - [ ] Type Validation
-  - [ ] Type Inference
-  - [ ] Runtime Validation
-  - [ ] Test
+- [x] **`htmlTagConfig` builder** - validates tag definitions, cross-references, and attribute DSL
+  - [x] Type Validation
+  - [x] Type Inference
+  - [x] Runtime Validation
+  - [x] Test
 
-- [ ] **innerHTML cross-references**
-  - [ ] Validates referenced tags exist in config
-  - [ ] `#text` allowed for text-containing tags
-  - [ ] `*` wildcard allows any child tag
-  - [ ] Self-referencing tags (`div` containing `div`)
-  - [ ] Mixed `#text` + tag references
-  - [ ] Void elements (empty `innerHTML: []`)
+- [x] **innerHTML cross-references**
+  - [x] Validates referenced tags exist in config
+  - [x] `#text` allowed for text-containing tags
+  - [x] `*` wildcard allows any child tag
+  - [x] Self-referencing tags (`div` containing `div`)
+  - [x] Mixed `#text` + tag references
+  - [x] Void elements (empty `innerHTML: []`)
 
-- [ ] **Tag-specific attributes**
-  - [ ] Attributes validated via DSL on each tag
-  - [ ] Literal union attributes (`dir: "'ltr' | 'rtl' | 'auto' | undefined"`)
-  - [ ] Per-tag attribute overrides
+- [x] **Tag-specific attributes**
+  - [x] Attributes validated via DSL on each tag
+  - [x] Literal union attributes (`dir: "'ltr' | 'rtl' | 'auto' | undefined"`)
+  - [x] Per-tag attribute overrides
+
+- [x] **Edge Cases**
+  - [x] Empty tag config `{}` accepted
+  - [x] Tags with template literal DSL attributes
+  - [x] Object reference identity preserved
 
 ## CSS Syntax
 
-- [ ] **`cssSyntaxConfig` builder** - validates syntax token definitions with recursive keyword resolution
-  - [ ] Type Validation
-  - [ ] Type Inference
-  - [ ] Runtime Validation
-  - [ ] Test
+- [x] **`cssSyntaxConfig` builder** - validates syntax token definitions with recursive keyword resolution
+  - [x] Type Validation
+  - [x] Type Inference
+  - [x] Runtime Validation
+  - [x] Test
 
-- [ ] **Recursive keyword resolution** - `<length>` defined as template literal, used in `<length-percentage>` as `"<length> | <percentage>"`
-  - [ ] Type Validation
-  - [ ] Type Inference
-  - [ ] Runtime Validation
-  - [ ] Parse
-  - [ ] Test
+- [x] **Recursive keyword resolution** - `<length>` defined as template literal, used in `<length-percentage>` as `"<length> | <percentage>"`
+  - [x] Type Validation
+  - [x] Type Inference
+  - [x] Runtime Validation
+  - [x] Parse
+  - [x] Test
 
-- [ ] **Edge Cases**
+- [x] **Edge Cases**
   - [ ] Circular or self-referencing syntax tokens
-  - [ ] Unknown token reference raises error
-  - [ ] Mixed token + literal unions
+  - [x] Unknown token reference raises error
+  - [x] Mixed token + literal unions
 
 ## CSS Attributes
 
-- [ ] **`cssAttributeConfig` builder** - maps CSS property names to syntax tokens or literal DSL strings
-  - [ ] Type Validation
-  - [ ] Type Inference
-  - [ ] Runtime Validation
-  - [ ] Test
+- [x] **`cssAttributeConfig` builder** - maps CSS property names to syntax tokens or literal DSL strings
+  - [x] Type Validation
+  - [x] Type Inference
+  - [x] Runtime Validation
+  - [x] Test
 
-- [ ] **Token resolution & type inference**
-  - [ ] Single token resolves to raw DSL string
-  - [ ] Quoted literals infer as quoted string types
-  - [ ] Mixed token + literal unions
-  - [ ] Multiple attributes infer as mapped object
-  - [ ] Unknown token is a type-level error
+- [x] **Token resolution & type inference**
+  - [x] Single token resolves to raw DSL string
+  - [x] Quoted literals infer as quoted string types
+  - [x] Mixed token + literal unions
+  - [x] Multiple attributes infer as mapped object
+  - [x] Unknown token is a type-level error
 
 ## CSS Properties
 
-- [ ] **`cssPropertiesConfig` builder** - validates CSS `@property` rule definitions (`syntax`, `inherits`, `initial-value`)
-  - [ ] Type Validation
-  - [ ] Type Inference
-  - [ ] Runtime Validation
-  - [ ] Test
+- [x] **`cssPropertiesConfig` builder** - validates CSS `@property` rule definitions (`syntax`, `inherits`, `initial-value`)
+  - [x] Type Validation
+  - [x] Type Inference
+  - [x] Runtime Validation
+  - [x] Test
 
-- [ ] **`syntax` field validation**
-  - [ ] Must reference valid CSS syntax tokens
-  - [ ] DSL string validated at runtime via `dslString()`
-  - [ ] Supports complex DSL unions
+- [x] **`syntax` field validation**
+  - [x] Must reference valid CSS syntax tokens
+  - [x] DSL string validated at runtime via `dslString()`
+  - [x] Supports complex DSL unions
 
-- [ ] **`inherits` field**
-  - [ ] Boolean validation
-  - [ ] Default handling
+- [x] **`inherits` field**
+  - [x] Boolean validation
+  - [x] Default handling
 
-- [ ] **`initial-value` field**
-  - [ ] Validated against resolved syntax type
-  - [ ] Optional (may be omitted)
-  - [ ] Must match the `syntax` DSL at the type level
+- [x] **`initial-value` field**
+  - [x] Validated against resolved syntax type
+  - [x] Optional (may be omitted)
+  - [x] Must match the `syntax` DSL at the type level
 
-- [ ] **Property name validation** - names must start with `--`
-  - [ ] Type-level error for invalid names
-  - [ ] Runtime check for `--` prefix
+- [x] **Property name validation** - names must start with `--`
+  - [x] Type-level error for invalid names
+  - [x] Runtime check for `--` prefix
 
-- [ ] **Edge Cases**
-  - [ ] Empty config `{}`
-  - [ ] Multiple custom properties
-  - [ ] Property names with `_` prefix (`--_a`)
+- [x] **Edge Cases**
+  - [x] Empty config `{}`
+  - [x] Multiple custom properties
+  - [x] Property names with `_` prefix (`--_a`)
 
 ---
 
 ## Create Component
 
-- [ ] **`createComponent` function** - validates a component structure against all configs
-  - [ ] Type Validation
-  - [ ] Type Inference
-  - [ ] Runtime Validation
+- [x] **`createComponent` function** - validates a component structure against all configs
+  - [x] Type Validation
+  - [x] Type Inference
+  - [x] Runtime Validation
+  - [x] Test
+
+- [x] **Tag validation**
+  - [x] Recognized tag from tag config passes
+  - [x] Unknown tag is a type-level error
+  - [x] Missing `tag` property is rejected
+
+- [x] **Attribute validation**
+  - [x] Global attributes merged with tag-specific attributes
+  - [x] Attribute values type-checked against inferred DSL types
+  - [x] Undocumented attributes are rejected
+  - [x] Optional attributes (`| undefined`) accept omission
+
+- [x] **innerHTML validation**
+  - [x] Text nodes allowed only when `#text` is in tag's innerHTML
+  - [x] Child components must have tags listed in parent's innerHTML
+  - [x] `*` wildcard allows any child tag
+  - [x] Void elements (empty `innerHTML: []`) reject children
+  - [x] Nested hierarchy validated recursively
+  - [x] Mixed text + child components
+
+- [x] **CSS validation**
+  - [x] Property values validated against CSS syntax config via `DSLInfer`
+  - [x] CSS custom properties (`--*`) resolved against CSS properties config
+  - [x] Child CSS selectors (`> childName`) allow per-child CSS blocks
+  - [x] Nested CSS selectors validated recursively
+
+---
+
+## CSS Pseudo Class and Element
+
+### Pseudo Config Builder
+
+- [ ] **`cssPseudoConfig` function** - validates a pseudo-class/element config with scoped property DSL
+  - [ ] Type validation - accepts `:` and `::` prefixed keys
+  - [ ] Type validation - rejects names without `:` or `::` prefix
+  - [ ] Type validation - validates DSL strings for each scoped property
+  - [ ] Runtime validation - returns config unchanged
+  - [ ] Runtime validation - throws for invalid DSL in property values
+  - [ ] Runtime validation - preserves object reference
+  - [ ] Edge case - empty config `{}` accepted
   - [ ] Test
 
-- [ ] **Tag validation**
-  - [ ] Recognized tag from tag config passes
-  - [ ] Unknown tag is a type-level error
-  - [ ] Missing `tag` property is rejected
+### Tag Config Pseudo Declaration
 
-- [ ] **Attribute validation**
-  - [ ] Global attributes merged with tag-specific attributes
-  - [ ] Attribute values type-checked against inferred DSL types
-  - [ ] Undocumented attributes are rejected
-  - [ ] Optional attributes (`| undefined`) accept omission
+- [ ] Extend `BaseHTMLTagConfig` with optional `pseudo: string[]` field
+  - [ ] Type validation - accepts tag with valid pseudo references
+  - [ ] Type validation - rejects pseudo name not starting with `:`
+  - [ ] Type validation - rejects pseudo name not in PSEUDO config
+  - [ ] Type validation - tag without `pseudo` key = no pseudo support
+  - [ ] Type validation - tag with `pseudo: []` = no pseudo support
+  - [ ] Runtime validation - throws for pseudo name not in PSEUDO config
+  - [ ] Runtime validation - accepts empty pseudo list
+  - [ ] Runtime validation - preserves object reference
+  - [ ] Edge case - multiple tags with different pseudo lists
+  - [ ] Test
 
-- [ ] **innerHTML validation**
-  - [ ] Text nodes allowed only when `#text` is in tag's innerHTML
-  - [ ] Child components must have tags listed in parent's innerHTML
-  - [ ] `*` wildcard allows any child tag
-  - [ ] Void elements (empty `innerHTML: []`) reject children
-  - [ ] Nested hierarchy validated recursively
-  - [ ] Mixed text + child components
+### Component CSS: Pseudo Block Validation
 
-- [ ] **CSS validation**
-  - [ ] Property values validated against CSS syntax config via `DSLInfer`
-  - [ ] CSS custom properties (`--*`) resolved against CSS properties config
-  - [ ] Child CSS selectors (`> childName`) allow per-child CSS blocks
-  - [ ] Nested CSS selectors validated recursively
+- [ ] Extend `ValidateComponentCSSStructure` to validate pseudo blocks against PSEUDO config
+  - [ ] Type validation - pseudo with all its scoped properties passes
+  - [ ] Type validation - pseudo with property NOT in its scope is rejected
+  - [ ] Type validation - pseudo on tag that doesn't declare it is rejected
+  - [ ] Type validation - pseudo on tag with `pseudo: []` is rejected
+  - [ ] Type validation - pseudo on tag with no `pseudo` key is rejected
+  - [ ] Type validation - multiple pseudos in same css block accepted
+  - [ ] Type validation - invalid DSL value in pseudo's scoped property rejected
+  - [ ] Type validation - pseudo inside child selector (`> child: { ":hover": {...} }`)
+  - [ ] Type validation - child selector inside pseudo (`":hover": { "> child": {...} }`)
+  - [ ] Type validation - pseudo inside nested pseudo (`":hover": { ":focus": {...} }`)
+  - [ ] Test
+
+### Files
+
+| File | Change |
+|------|--------|
+| `src/css/pseudo-config/index.ts` | New - `cssPseudoConfig` builder |
+| `src/css/pseudo-config/types.ts` | New - types |
+| `src/html/tag-config/types.ts` | Extend with optional `pseudo: string[]` |
+| `src/html/tag-config/index.ts` | Validate pseudo refs at runtime |
+| `src/create-component.ts` | ValidateComponentCSSStructure merges pseudo config per-tag |
+| `tests/css/pseudo-config.test.ts` | New - builder tests |
+| `tests/html/tag-config.test.ts` | Add pseudo key tests |
+| `tests/create-component.test.ts` | Add pseudo CSS block tests |
+
+### Variation System (Tag-level)
+
+- [ ] Extend `BaseHTMLTagConfig` with optional `variations` field
+  - [ ] Each variation maps a name to a partial CSS block
+  - [ ] Variation CSS validated against CSSAttributesConfig + CSSPropertiesConfig
+  - [ ] Type validation - rejects variation with invalid DSL
+  - [ ] Type validation - rejects variation with unknown CSS property
+  - [ ] Type validation - rejects variation with `--` property not in CSSPropertiesConfig
+  - [ ] Type validation - accepts tag with empty variations `{}`
+  - [ ] Type validation - accepts tag without `variations` key
+  - [ ] Runtime validation - throws for invalid DSL in variation CSS
+  - [ ] Runtime validation - preserves object reference
+  - [ ] Edge case - multiple tags with different variation sets
+  - [ ] Test
+
+### Component Variation Selection
+
+- [ ] Component selects variation via `attributes.variant`
+  - [ ] Type validation - valid `variant` matching a variation passes
+  - [ ] Type validation - `variant` value not in variations is rejected
+  - [ ] Type validation - `variant` on tag with no variations is rejected
+  - [ ] Type validation - component without `variant` on tag with variations accepted
+  - [ ] Variation CSS merged with inline `css` (inline overrides)
+  - [ ] Pseudo blocks in component css work after variant merge
+  - [ ] Pseudo block can override variation's CSS properties
+  - [ ] Test
+
+### Files
+
+| File | Change |
+|------|--------|
+| `src/html/tag-config/types.ts` | Extend with optional `variations` type |
+| `src/html/tag-config/index.ts` | Runtime validation of variation CSS |
+| `src/create-component.ts` | ValidateComponentCSSStructure intersects variation CSS |
+| `tests/create-component.test.ts` | Add variation CSS merge tests |
+
