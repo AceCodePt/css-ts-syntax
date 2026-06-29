@@ -49,7 +49,7 @@ type ValidateRestOfBackTick<
 type SingleDSLValidate<
   Keywords extends Record<string, any>,
   L extends string,
-  R extends string,
+  R extends string | never,
 > =
   Trim<L> extends `${infer N extends number}`
     ? PipeWhenExists<Keywords, N, R>
