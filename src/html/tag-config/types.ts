@@ -25,13 +25,26 @@ export type ValidateHTMLTagConfig<
 > = {
   [Tag in keyof TagDefinition]: Tag extends string
     ? {
-        attributes: ValidateHTMLAttributesConfig<
+        attributes: TagDefinition[Tag]["attributes"] extends ValidateHTMLAttributesConfig<
           Keywords,
           Exclude<TagDefinition[Tag]["attributes"], undefined>
-        >;
-        innerHTML: BaseInnerHTMLTagConfig<Keyof<TagDefinition>>;
-        cssPseudoClass: `:${string}`[];
-        cssPseudoElement: `::${string}`[];
+        >
+          ? TagDefinition[Tag]["attributes"]
+          : ValidateHTMLAttributesConfig<
+              Keywords,
+              Exclude<TagDefinition[Tag]["attributes"], undefined>
+            >;
+        innerHTML: TagDefinition[Tag]["innerHTML"] extends BaseInnerHTMLTagConfig<
+          Keyof<TagDefinition>
+        >
+          ? TagDefinition[Tag]["innerHTML"]
+          : BaseInnerHTMLTagConfig<Keyof<TagDefinition>>;
+        cssPseudoClass: TagDefinition[Tag]["cssPseudoClass"] extends `:${string}`[]
+          ? TagDefinition[Tag]["cssPseudoClass"]
+          : `:${string}`[];
+        cssPseudoElement: TagDefinition[Tag]["cssPseudoElement"] extends `::${string}`[]
+          ? TagDefinition[Tag]["cssPseudoElement"]
+          : `::${string}`[];
       }
     : TagDefinition[Tag];
 };

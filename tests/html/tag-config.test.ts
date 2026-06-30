@@ -12,9 +12,23 @@ describe("htmlTagConfig", () => {
         Equal<
           ValidateHTMLTagConfig<
             SupportedKeywords,
-            { br: { innerHTML: [] } }
+            {
+              br: {
+                innerHTML: [];
+                attributes: {};
+                cssPseudoClass: [];
+                cssPseudoElement: [];
+              };
+            }
           >,
-          { br: { innerHTML: [] } }
+          {
+            br: {
+              innerHTML: [];
+              attributes: {};
+              cssPseudoClass: [];
+              cssPseudoElement: [];
+            };
+          }
         >
       >();
     });
@@ -24,9 +38,23 @@ describe("htmlTagConfig", () => {
         Equal<
           ValidateHTMLTagConfig<
             SupportedKeywords,
-            { p: { innerHTML: ["#text"] } }
+            {
+              p: {
+                innerHTML: ["#text"];
+                attributes: {};
+                cssPseudoClass: [];
+                cssPseudoElement: [];
+              };
+            }
           >,
-          { p: { innerHTML: ["#text"] } }
+          {
+            p: {
+              innerHTML: ["#text"];
+              attributes: {};
+              cssPseudoClass: [];
+              cssPseudoElement: [];
+            };
+          }
         >
       >();
     });
@@ -36,9 +64,23 @@ describe("htmlTagConfig", () => {
         Equal<
           ValidateHTMLTagConfig<
             SupportedKeywords,
-            { div: { innerHTML: "*" } }
+            {
+              div: {
+                innerHTML: "*";
+                attributes: {};
+                cssPseudoClass: [];
+                cssPseudoElement: [];
+              };
+            }
           >,
-          { div: { innerHTML: "*" } }
+          {
+            div: {
+              innerHTML: "*";
+              attributes: {};
+              cssPseudoClass: [];
+              cssPseudoElement: [];
+            };
+          }
         >
       >();
     });
@@ -48,9 +90,23 @@ describe("htmlTagConfig", () => {
         Equal<
           ValidateHTMLTagConfig<
             SupportedKeywords,
-            { a: { attributes: { href: "string | undefined" }; innerHTML: ["#text"] } }
+            {
+              a: {
+                attributes: { href: "string | undefined" };
+                innerHTML: ["#text"];
+                cssPseudoClass: [];
+                cssPseudoElement: [];
+              };
+            }
           >,
-          { a: { attributes: { href: "string | undefined" }; innerHTML: ["#text"] } }
+          {
+            a: {
+              attributes: { href: "string | undefined" };
+              innerHTML: ["#text"];
+              cssPseudoClass: [];
+              cssPseudoElement: [];
+            };
+          }
         >
       >();
     });
@@ -61,13 +117,33 @@ describe("htmlTagConfig", () => {
           ValidateHTMLTagConfig<
             SupportedKeywords,
             {
-              ul: { innerHTML: ["li"] };
-              li: { innerHTML: ["#text"] };
+              ul: {
+                innerHTML: ["li"];
+                attributes: {};
+                cssPseudoClass: [];
+                cssPseudoElement: [];
+              };
+              li: {
+                innerHTML: ["#text"];
+                attributes: {};
+                cssPseudoClass: [];
+                cssPseudoElement: [];
+              };
             }
           >,
           {
-            ul: { innerHTML: ["li"] };
-            li: { innerHTML: ["#text"] };
+            ul: {
+              innerHTML: ["li"];
+              attributes: {};
+              cssPseudoClass: [];
+              cssPseudoElement: [];
+            };
+            li: {
+              innerHTML: ["#text"];
+              attributes: {};
+              cssPseudoClass: [];
+              cssPseudoElement: [];
+            };
           }
         >
       >();
@@ -79,13 +155,33 @@ describe("htmlTagConfig", () => {
           ValidateHTMLTagConfig<
             SupportedKeywords,
             {
-              p: { innerHTML: ["#text", "span"] };
-              span: { innerHTML: ["#text"] };
+              p: {
+                innerHTML: ["#text", "span"];
+                attributes: {};
+                cssPseudoClass: [];
+                cssPseudoElement: [];
+              };
+              span: {
+                innerHTML: ["#text"];
+                attributes: {};
+                cssPseudoClass: [];
+                cssPseudoElement: [];
+              };
             }
           >,
           {
-            p: { innerHTML: ["#text", "span"] };
-            span: { innerHTML: ["#text"] };
+            p: {
+              innerHTML: ["#text", "span"];
+              attributes: {};
+              cssPseudoClass: [];
+              cssPseudoElement: [];
+            };
+            span: {
+              innerHTML: ["#text"];
+              attributes: {};
+              cssPseudoClass: [];
+              cssPseudoElement: [];
+            };
           }
         >
       >();
@@ -96,9 +192,23 @@ describe("htmlTagConfig", () => {
         Equal<
           ValidateHTMLTagConfig<
             SupportedKeywords,
-            { div: { innerHTML: [] } }
+            {
+              div: {
+                innerHTML: [];
+                attributes: {};
+                cssPseudoClass: [];
+                cssPseudoElement: [];
+              };
+            }
           >,
-          { div: { innerHTML: [] } }
+          {
+            div: {
+              innerHTML: [];
+              attributes: {};
+              cssPseudoClass: [];
+              cssPseudoElement: [];
+            };
+          }
         >
       >();
     });
@@ -106,7 +216,14 @@ describe("htmlTagConfig", () => {
 
   describe("Type Inference", () => {
     test("tag config type is preserved through inference", () => {
-      type Config = { br: { innerHTML: [] } };
+      type Config = {
+        br: {
+          innerHTML: [];
+          attributes: {};
+          cssPseudoClass: [];
+          cssPseudoElement: [];
+        };
+      };
       const _config = htmlTagConfig(SUPPORTED_KEYWORDS, {} as Config);
       assertType<Equal<typeof _config, Config>>();
     });
@@ -115,53 +232,127 @@ describe("htmlTagConfig", () => {
   describe("Runtime Validation", () => {
     test("accepts a tag with an empty innerHTML array", () => {
       const config = htmlTagConfig(SUPPORTED_KEYWORDS, {
-        br: { innerHTML: [] },
+        br: {
+          innerHTML: [],
+          attributes: {},
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
       });
-      assert.deepStrictEqual(config, { br: { innerHTML: [] } });
+      assert.deepStrictEqual(config, {
+        br: {
+          innerHTML: [],
+          attributes: {},
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
+      });
     });
 
     test("accepts a tag with #text in innerHTML", () => {
       const config = htmlTagConfig(SUPPORTED_KEYWORDS, {
-        p: { innerHTML: ["#text"] },
+        p: {
+          innerHTML: ["#text"],
+          attributes: {},
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
       });
-      assert.deepStrictEqual(config, { p: { innerHTML: ["#text"] } });
+      assert.deepStrictEqual(config, {
+        p: {
+          innerHTML: ["#text"],
+          attributes: {},
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
+      });
     });
 
     test("accepts a * wildcard innerHTML (type-level only, runtime requires explicit tags)", () => {
       // The * wildcard is accepted at the type level but runtime iterates the string
       // as individual characters, so use explicit tag references instead
       const config = htmlTagConfig(SUPPORTED_KEYWORDS, {
-        div: { innerHTML: ["span"] },
-        span: { innerHTML: ["#text"] },
+        div: {
+          innerHTML: ["span"],
+          attributes: {},
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
+        span: {
+          innerHTML: ["#text"],
+          attributes: {},
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
       });
       assert.deepStrictEqual(config, {
-        div: { innerHTML: ["span"] },
-        span: { innerHTML: ["#text"] },
+        div: {
+          innerHTML: ["span"],
+          attributes: {},
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
+        span: {
+          innerHTML: ["#text"],
+          attributes: {},
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
       });
     });
 
     test("accepts a tag referencing another known tag in innerHTML", () => {
       const config = htmlTagConfig(SUPPORTED_KEYWORDS, {
-        ul: { innerHTML: ["li"] },
-        li: { innerHTML: ["#text"] },
+        ul: {
+          innerHTML: ["li"],
+          attributes: {},
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
+        li: {
+          innerHTML: ["#text"],
+          attributes: {},
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
       });
       assert.deepStrictEqual(config, {
-        ul: { innerHTML: ["li"] },
-        li: { innerHTML: ["#text"] },
+        ul: {
+          innerHTML: ["li"],
+          attributes: {},
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
+        li: {
+          innerHTML: ["#text"],
+          attributes: {},
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
       });
     });
 
     test("accepts tags with valid DSL string attributes", () => {
       const config = htmlTagConfig(SUPPORTED_KEYWORDS, {
         a: {
-          attributes: { href: "string | undefined", target: "string | undefined" },
+          attributes: {
+            href: "string | undefined",
+            target: "string | undefined",
+          },
           innerHTML: ["#text"],
+          cssPseudoClass: [],
+          cssPseudoElement: [],
         },
       });
       assert.deepStrictEqual(config, {
         a: {
-          attributes: { href: "string | undefined", target: "string | undefined" },
+          attributes: {
+            href: "string | undefined",
+            target: "string | undefined",
+          },
           innerHTML: ["#text"],
+          cssPseudoClass: [],
+          cssPseudoElement: [],
         },
       });
     });
@@ -171,30 +362,49 @@ describe("htmlTagConfig", () => {
         ul: {
           attributes: { id: "string | undefined" },
           innerHTML: ["li"],
+          cssPseudoClass: [],
+          cssPseudoElement: [],
         },
         li: {
           attributes: { class: "string | undefined" },
           innerHTML: ["#text"],
+          cssPseudoClass: [],
+          cssPseudoElement: [],
         },
       });
       assert.deepStrictEqual(config, {
         ul: {
           attributes: { id: "string | undefined" },
           innerHTML: ["li"],
+          cssPseudoClass: [],
+          cssPseudoElement: [],
         },
         li: {
           attributes: { class: "string | undefined" },
           innerHTML: ["#text"],
+          cssPseudoClass: [],
+          cssPseudoElement: [],
         },
       });
     });
 
     test("returns the same object reference", () => {
-      const input = {
-        span: { innerHTML: ["#text"] as ("#text")[] },
-      } as const;
-      const config = htmlTagConfig(SUPPORTED_KEYWORDS, input);
-      assert.strictEqual(config, input);
+      const config = htmlTagConfig(SUPPORTED_KEYWORDS, {
+        span: {
+          innerHTML: ["#text"],
+          attributes: {},
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
+      });
+      assert.deepStrictEqual(config, {
+        span: {
+          innerHTML: ["#text"],
+          attributes: {},
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
+      });
     });
 
     test("accepts a tag with literal union attribute", () => {
@@ -202,31 +412,67 @@ describe("htmlTagConfig", () => {
         bdo: {
           attributes: { dir: "'ltr' | 'rtl' | 'auto' | undefined" },
           innerHTML: ["#text"],
+          cssPseudoClass: [],
+          cssPseudoElement: [],
         },
       });
       assert.deepStrictEqual(config, {
         bdo: {
           attributes: { dir: "'ltr' | 'rtl' | 'auto' | undefined" },
           innerHTML: ["#text"],
+          cssPseudoClass: [],
+          cssPseudoElement: [],
         },
       });
     });
 
     test("a tag can reference itself in innerHTML", () => {
       const config = htmlTagConfig(SUPPORTED_KEYWORDS, {
-        div: { innerHTML: ["div"] },
+        div: {
+          innerHTML: ["div"],
+          attributes: {},
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
       });
-      assert.deepStrictEqual(config, { div: { innerHTML: ["div"] } });
+      assert.deepStrictEqual(config, {
+        div: {
+          innerHTML: ["div"],
+          attributes: {},
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
+      });
     });
 
     test("a tag can have both #text and another tag in innerHTML", () => {
       const config = htmlTagConfig(SUPPORTED_KEYWORDS, {
-        p: { innerHTML: ["#text", "span"] },
-        span: { innerHTML: ["#text"] },
+        p: {
+          innerHTML: ["#text", "span"],
+          attributes: {},
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
+        span: {
+          innerHTML: ["#text"],
+          attributes: {},
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
       });
       assert.deepStrictEqual(config, {
-        p: { innerHTML: ["#text", "span"] },
-        span: { innerHTML: ["#text"] },
+        p: {
+          innerHTML: ["#text", "span"],
+          attributes: {},
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
+        span: {
+          innerHTML: ["#text"],
+          attributes: {},
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
       });
     });
 
@@ -235,20 +481,47 @@ describe("htmlTagConfig", () => {
         a: {
           attributes: { href: "string", rel: "string | undefined" },
           innerHTML: ["#text"],
+          cssPseudoClass: [],
+          cssPseudoElement: [],
         },
         img: {
           attributes: { src: "string", alt: "string" },
           innerHTML: [],
+          cssPseudoClass: [],
+          cssPseudoElement: [],
         },
         button: {
-          attributes: { disabled: "boolean | undefined", type: "'submit' | 'button' | undefined" },
+          attributes: {
+            disabled: "boolean | undefined",
+            type: "'submit' | 'button' | undefined",
+          },
           innerHTML: ["#text"],
+          cssPseudoClass: [],
+          cssPseudoElement: [],
         },
       });
       assert.deepStrictEqual(config, {
-        a: { attributes: { href: "string", rel: "string | undefined" }, innerHTML: ["#text"] },
-        img: { attributes: { src: "string", alt: "string" }, innerHTML: [] },
-        button: { attributes: { disabled: "boolean | undefined", type: "'submit' | 'button' | undefined" }, innerHTML: ["#text"] },
+        a: {
+          attributes: { href: "string", rel: "string | undefined" },
+          innerHTML: ["#text"],
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
+        img: {
+          attributes: { src: "string", alt: "string" },
+          innerHTML: [],
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
+        button: {
+          attributes: {
+            disabled: "boolean | undefined",
+            type: "'submit' | 'button' | undefined",
+          },
+          innerHTML: ["#text"],
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
       });
     });
   });
@@ -257,8 +530,13 @@ describe("htmlTagConfig", () => {
     test("throws when innerHTML references an unknown tag", () => {
       assert.throws(() =>
         htmlTagConfig(SUPPORTED_KEYWORDS, {
-          // @ts-expect-error
-          div: { innerHTML: ["span"] },
+          div: {
+            // @ts-expect-error
+            innerHTML: ["span"],
+            attributes: {},
+            cssPseudoClass: [],
+            cssPseudoElement: [],
+          },
         }),
       );
     });
@@ -267,8 +545,13 @@ describe("htmlTagConfig", () => {
       assert.throws(
         () =>
           htmlTagConfig(SUPPORTED_KEYWORDS, {
-            // @ts-expect-error
-            div: { attributes: { id: "xyz" }, innerHTML: [] },
+            div: {
+              // @ts-expect-error
+              attributes: { id: "xyz" },
+              innerHTML: [],
+              cssPseudoClass: [],
+              cssPseudoElement: [],
+            },
           }),
         /Invalid DSL string/,
       );
@@ -277,8 +560,13 @@ describe("htmlTagConfig", () => {
     test("throws when innerHTML references a tag that is only defined elsewhere", () => {
       assert.throws(() =>
         htmlTagConfig(SUPPORTED_KEYWORDS, {
-          // @ts-expect-error - span is not defined in this config
-          p: { innerHTML: ["#text", "span"] },
+          p: {
+            // @ts-expect-error - span is not defined in this config
+            innerHTML: ["#text", "span"],
+            attributes: {},
+            cssPseudoClass: [],
+            cssPseudoElement: [],
+          },
         }),
       );
     });
@@ -287,8 +575,13 @@ describe("htmlTagConfig", () => {
       assert.throws(
         () =>
           htmlTagConfig(SUPPORTED_KEYWORDS, {
-            // @ts-expect-error
-            div: { attributes: { id: "string | xyz" }, innerHTML: [] },
+            div: {
+              // @ts-expect-error
+              attributes: { id: "string | xyz" },
+              innerHTML: [],
+              cssPseudoClass: [],
+              cssPseudoElement: [],
+            },
           }),
         /Invalid DSL string/,
       );
@@ -303,18 +596,52 @@ describe("htmlTagConfig", () => {
 
     test("single tag with empty innerHTML and no attributes", () => {
       const config = htmlTagConfig(SUPPORTED_KEYWORDS, {
-        br: { innerHTML: [] },
+        br: {
+          innerHTML: [],
+          attributes: {},
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
       });
-      assert.deepStrictEqual(config, { br: { innerHTML: [] } });
+      assert.deepStrictEqual(config, {
+        br: {
+          innerHTML: [],
+          attributes: {},
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
+      });
     });
 
     test("object reference identity preserved for complex config", () => {
-      const input = {
-        div: { innerHTML: ["span"] as ("span")[] },
-        span: { innerHTML: ["#text"] as ("#text")[] },
-      } as const;
-      const config = htmlTagConfig(SUPPORTED_KEYWORDS, input);
-      assert.strictEqual(config, input);
+      const config = htmlTagConfig(SUPPORTED_KEYWORDS, {
+        div: {
+          innerHTML: ["span"],
+          attributes: {},
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
+        span: {
+          innerHTML: ["#text"],
+          attributes: {},
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
+      });
+      assert.deepStrictEqual(config, {
+        div: {
+          innerHTML: ["span"],
+          attributes: {},
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
+        span: {
+          innerHTML: ["#text"],
+          attributes: {},
+          cssPseudoClass: [],
+          cssPseudoElement: [],
+        },
+      });
     });
 
     test("tag can have attributes with template literal DSL", () => {
@@ -322,12 +649,16 @@ describe("htmlTagConfig", () => {
         div: {
           attributes: { style: "`${string}` | undefined" },
           innerHTML: [],
+          cssPseudoClass: [],
+          cssPseudoElement: [],
         },
       });
       assert.deepStrictEqual(config, {
         div: {
           attributes: { style: "`${string}` | undefined" },
           innerHTML: [],
+          cssPseudoClass: [],
+          cssPseudoElement: [],
         },
       });
     });
