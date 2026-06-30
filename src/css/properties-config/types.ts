@@ -5,7 +5,7 @@ import type {
 } from "../syntax-config/types.ts";
 
 export type BaseCSSPropertyValue = {
-  syntax: string;
+  syntax?: string;
   inherits?: boolean;
   "initial-value"?: string;
 };
@@ -22,9 +22,13 @@ export type ValidateCSSPropertiesConfig<
   [K in keyof P]: K extends string
     ? K extends `--${string}`
       ? {
-          syntax: DSLValidate<S, P[K]["syntax"]>;
+          syntax: P[K]["syntax"] extends string
+            ? DSLValidate<S, P[K]["syntax"]>
+            : undefined;
           inherits: boolean;
-          "initial-value": InferCSSSyntax<Keywords, S, P[K]["syntax"]>;
+          "initial-value": P[K]["syntax"] extends string
+            ? InferCSSSyntax<Keywords, S, P[K]["syntax"]>
+            : P[K]["initial-value"];
         }
       : `You must have the property start with -- instead like --${K}`
     : P[K];

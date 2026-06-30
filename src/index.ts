@@ -1,6 +1,6 @@
 // Let's first describe the basic types
 
-import { cssPropertiesConfig } from "./css/css-properties-config.ts";
+import { cssPropertiesConfig } from "./css/properties-config/index.ts";
 import {
   CSS_ATTRIBUTES,
   CSS_SYNTAX,
@@ -15,7 +15,7 @@ export const CSS_PROPERTIES = cssPropertiesConfig(
   CSS_SYNTAX,
   {
     "--a": {
-      syntax: "<percentage>",
+      syntax: "<alpha-value>",
       inherits: true,
       "initial-value": "1%",
     },
@@ -34,29 +34,50 @@ export const CSS_PROPERTIES = cssPropertiesConfig(
 
 // index.html
 // <div>
-// <div> assdf <span class="bedge"/> </div>
+// <div> asdfssfd </div>
 // </div>
 
 // index.css
-// div { > span { } }
+// div {
+//    span {
+// asdfasdfa
+// }
+// }
 
 // Abstract Syntax tree
-const card = createComponent(HTML_TAG_DEFINITIONS, HTML_GLOBAL_ATTRIBUTES, {
-  tag: "div",
-  attributes: {},
-  innerHTML: {
-    img: {
-      tag: "img",
-      attributes: { src: "" },
-    },
-    title: {
-      tag: "li",
-      innerHTML: {
-        check: "check",
-        asdfd: {
-          tag: "input",
-          attributes: { type: "hidden", value: "" },
+const card = createComponent(
+  SUPPORTED_KEYWORDS,
+  HTML_GLOBAL_ATTRIBUTES,
+  HTML_TAG_DEFINITIONS,
+  CSS_SYNTAX,
+  CSS_ATTRIBUTES,
+  CSS_PROPERTIES,
+  {
+    tag: "div",
+    attributes: {},
+    innerHTML: {
+      img: {
+        tag: "img",
+      },
+      title: {
+        tag: "h1",
+      },
+      points: {
+        tag: "ul",
+        innerHTML: {
+          point: {
+            tag: "li",
+          },
         },
+      },
+    },
+    css: {
+      width: "100%",
+      height: "100%",
+      "--background-color": "currentColor",
+      "> points": {
+        padding: "10px",
+        "> point": {},
       },
     },
   },
