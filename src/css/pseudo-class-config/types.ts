@@ -1,1 +1,1 @@
-export type BaseCSSPseudoClassConfig = `:${string}`[];
+export type BaseCSSPseudoClassConfig = readonly `:${string}`[];
